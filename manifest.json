@@ -2,7 +2,8 @@
   "name": "Arin's Maths Adventure",
   "short_name": "Arin Maths",
   "description": "Year 1 Maths — Brisbane AC V9 Curriculum",
-  "start_url": "/index.html",
+  /* ⚠️ 수정 포인트: 앞에 점(.)을 찍어 현재 경로임을 명시합니다 */
+  "start_url": "./index.html", 
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#F0EFFF",
