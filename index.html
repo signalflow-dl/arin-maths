@@ -6,1785 +6,736 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Arin Maths">
-<meta name="theme-color" content="#6C63FF">
+<meta name="theme-color" content="#FF6B6B">
 <title>Arin's Maths Adventure</title>
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════════
-   ROOT & RESET
-═══════════════════════════════════════════════ */
-:root {
-  --primary: #6C63FF;
-  --primary-dark: #5A52E0;
-  --secondary: #FF6584;
-  --accent: #43D9AD;
-  --sun: #FFD166;
-  --bg: #F0EFFF;
-  --card: #FFFFFF;
-  --text: #2D2A4A;
-  --muted: #9B97C4;
-  --success: #43D9AD;
-  --error: #FF6584;
-  --warning: #FFD166;
-  --radius: 20px;
-  --shadow: 0 8px 32px rgba(108,99,255,0.13);
-  --shadow-sm: 0 3px 12px rgba(108,99,255,0.10);
-  font-size: 16px;
-}
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; overflow: hidden; background: var(--bg); font-family: 'Nunito', sans-serif; color: var(--text); }
-button { font-family: 'Nunito', sans-serif; cursor: pointer; border: none; outline: none; }
-input { font-family: 'Nunito', sans-serif; outline: none; border: none; }
+:root{--red:#FF6B6B;--orange:#FF9F43;--yellow:#FFD166;--green:#06D6A0;--blue:#118AB2;--purple:#7B5EA7;--pink:#FF85A1;--bg:#FFF8F0;--card:#FFFFFF;--text:#2D2A4A;--muted:#A09CB0;--shadow:0 6px 24px rgba(45,42,74,0.10);--shadow-sm:0 3px 10px rgba(45,42,74,0.08);--r:20px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'Nunito',sans-serif;color:var(--text)}
+button{font-family:'Nunito',sans-serif;cursor:pointer;border:none;outline:none}
+#app{width:100vw;height:100vh;position:relative;overflow:hidden}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;overflow-y:auto;overflow-x:hidden;opacity:0;pointer-events:none;transition:opacity 0.25s}
+.screen.active{opacity:1;pointer-events:all}
+.bnav{position:fixed;bottom:0;left:0;right:0;height:calc(60px + env(safe-area-inset-bottom,0px));background:white;display:flex;align-items:flex-start;justify-content:space-around;padding-top:8px;box-shadow:0 -3px 16px rgba(45,42,74,0.08);border-top:1.5px solid rgba(45,42,74,0.06);z-index:50}
+.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;color:var(--muted);font-size:0.65rem;font-weight:800;padding:2px 0;transition:color 0.2s}
+.bnav-btn .bicon{font-size:1.4rem;transition:transform 0.2s}
+.bnav-btn.active{color:var(--red)}
+.bnav-btn.active .bicon{transform:scale(1.18)}
+.nav-spacer{height:calc(68px + env(safe-area-inset-bottom,0px));flex-shrink:0}
+.lang-btn{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:16px;z-index:60;background:white;border-radius:30px;padding:7px 14px;font-size:0.78rem;font-weight:800;color:var(--blue);box-shadow:var(--shadow-sm);border:2px solid rgba(17,138,178,0.15)}
+.lang-btn:active{transform:scale(0.95)}
 
-/* ═══════════════════════════════════════════════
-   APP SHELL
-═══════════════════════════════════════════════ */
-#app {
-  width: 100vw; height: 100vh;
-  display: flex; flex-direction: column;
-  overflow: hidden;
-  position: relative;
-}
+/* HOME */
+#home{background:linear-gradient(160deg,#FFF0E8 0%,#FFF8F0 60%,#F0F8FF 100%);padding-top:calc(56px + env(safe-area-inset-top,0px));padding-bottom:10px}
+.home-top{width:100%;max-width:580px;padding:0 20px;text-align:center}
+.home-title{font-family:'Fredoka One',cursive;font-size:clamp(1.8rem,6vw,2.6rem);color:var(--red);line-height:1.1}
+.home-sub{font-size:0.8rem;font-weight:700;color:var(--muted);margin-top:3px}
+.mascot{font-size:72px;margin:8px 0;animation:bob 2.8s ease-in-out infinite;display:block;text-align:center;filter:drop-shadow(0 6px 12px rgba(255,107,107,0.25))}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+.chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:0 20px;margin-top:4px}
+.chip{background:white;border-radius:30px;padding:7px 14px;font-size:0.78rem;font-weight:800;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:5px}
+.chip-dot{width:7px;height:7px;border-radius:50%}
+.level-card{width:calc(100% - 40px);max-width:520px;margin:14px auto 0;border-radius:28px;padding:20px 22px;background:linear-gradient(135deg,var(--red),var(--orange));color:white;box-shadow:0 10px 32px rgba(255,107,107,0.35);position:relative;overflow:hidden}
+.level-card::before{content:'';position:absolute;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.08);right:-40px;top:-50px}
+.lc-label{font-size:0.7rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;opacity:0.75}
+.lc-title{font-family:'Fredoka One',cursive;font-size:1.5rem;margin-top:4px;line-height:1.2}
+.lc-meta{font-size:0.78rem;opacity:0.82;margin-top:6px;display:flex;gap:14px;flex-wrap:wrap}
+.lc-progress{margin-top:14px;background:rgba(255,255,255,0.25);border-radius:20px;height:10px;overflow:hidden}
+.lc-progress-fill{height:100%;background:white;border-radius:20px;transition:width 0.6s ease}
+.lc-progress-label{font-size:0.72rem;opacity:0.82;margin-top:5px}
+.start-btn{margin-top:14px;background:white;color:var(--red);border-radius:16px;padding:12px 26px;font-size:0.95rem;font-weight:900;box-shadow:0 4px 0 rgba(0,0,0,0.12);transition:all 0.12s;display:inline-block}
+.start-btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,0.12)}
+.sec-title{width:100%;max-width:560px;padding:14px 20px 6px;font-size:0.72rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.week-strip{display:flex;gap:8px;padding:0 20px;width:100%;max-width:580px;overflow-x:auto;scrollbar-width:none}
+.week-strip::-webkit-scrollbar{display:none}
+.day-pill{flex-shrink:0;min-width:58px;background:white;border-radius:16px;padding:10px 8px;text-align:center;box-shadow:var(--shadow-sm);border:2px solid transparent;transition:all 0.2s}
+.day-pill.done{background:linear-gradient(135deg,#E8FFF5,#C8F5E4);border-color:var(--green)}
+.day-pill.today{border-color:var(--red);background:linear-gradient(135deg,#FFF0EC,#FFE0E0)}
+.day-pill.locked{opacity:0.4}
+.dp-name{font-size:0.68rem;font-weight:800;color:var(--muted);text-transform:uppercase}
+.dp-icon{font-size:1.3rem;margin:3px 0}
+.dp-score{font-size:0.68rem;font-weight:700;color:var(--text)}
+.strand-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px;width:100%;max-width:580px}
+.strand-card{background:white;border-radius:18px;padding:14px 12px;text-align:center;box-shadow:var(--shadow-sm);border:2px solid transparent}
+.sc-icon{font-size:1.8rem}
+.sc-name{font-size:0.78rem;font-weight:800;color:var(--text);margin-top:5px}
+.sc-bar-wrap{height:5px;background:#F0EEF8;border-radius:10px;margin-top:7px;overflow:hidden}
+.sc-bar{height:100%;border-radius:10px;background:var(--red);transition:width 0.6s}
 
-/* Animated background blobs */
-.blob {
-  position: fixed; border-radius: 50%;
-  filter: blur(60px); opacity: 0.18; pointer-events: none; z-index: 0;
-  animation: blobDrift ease-in-out infinite alternate;
-}
-.blob-1 { width: 350px; height: 350px; background: var(--primary); top: -100px; left: -80px; animation-duration: 12s; }
-.blob-2 { width: 280px; height: 280px; background: var(--secondary); bottom: -60px; right: -60px; animation-duration: 15s; }
-.blob-3 { width: 200px; height: 200px; background: var(--accent); top: 40%; left: 60%; animation-duration: 10s; }
-@keyframes blobDrift { from { transform: translate(0,0) scale(1); } to { transform: translate(30px,20px) scale(1.08); } }
+/* LESSON */
+#lesson{background:var(--bg);padding-top:calc(8px + env(safe-area-inset-top,0px))}
+.lesson-hdr{width:100%;max-width:580px;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.back-btn{width:38px;height:38px;border-radius:13px;background:white;box-shadow:var(--shadow-sm);display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--red);font-weight:900;flex-shrink:0}
+.back-btn:active{transform:scale(0.92)}
+.lhdr-info{flex:1}
+.lhdr-title{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--text);line-height:1.1}
+.lhdr-sub{font-size:0.7rem;color:var(--muted);font-weight:700}
+.xp-badge{background:var(--yellow);border-radius:20px;padding:5px 11px;font-size:0.78rem;font-weight:900;color:#7A5200;display:flex;align-items:center;gap:4px;flex-shrink:0}
+.phase-bar{width:calc(100% - 32px);max-width:548px;margin:0 auto 10px;display:flex;gap:6px;align-items:center;flex-shrink:0}
+.phase-pill{flex:1;height:8px;border-radius:10px;background:#EEE;transition:background 0.3s}
+.phase-pill.warmup{background:var(--orange)}
+.phase-pill.main{background:var(--blue)}
+.phase-label{font-size:0.68rem;font-weight:800;color:var(--muted);white-space:nowrap}
+.prog-dots{width:calc(100% - 32px);max-width:548px;margin:0 auto 10px;display:flex;gap:4px;flex-shrink:0}
+.pd{flex:1;height:9px;border-radius:10px;background:#E8E6F0;transition:all 0.3s}
+.pd.done-ok{background:var(--green)}
+.pd.done-wrong{background:var(--pink)}
+.pd.current{background:var(--red);animation:pdPulse 1s ease-in-out infinite}
+@keyframes pdPulse{0%,100%{opacity:1}50%{opacity:0.55}}
+.q-card{width:calc(100% - 32px);max-width:548px;margin:0 auto;background:white;border-radius:26px;padding:20px 18px;box-shadow:var(--shadow);flex-shrink:0}
+.q-badges{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.q-badge{border-radius:20px;padding:3px 11px;font-size:0.68rem;font-weight:800;letter-spacing:0.6px;text-transform:uppercase}
+.q-badge.warmup{background:#FFF3E0;color:#E65100}
+.q-badge.main{background:#E3F2FD;color:#0D47A1}
+.q-badge.naplan{background:#FFF8E1;color:#F57F17}
+.q-visual{min-height:72px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px;padding:10px;background:#FAFAFA;border-radius:14px;margin-bottom:12px}
+.dot-grid{display:grid;gap:6px}
+.dot-cell{width:28px;height:28px;border-radius:50%;background:var(--red);box-shadow:0 2px 6px rgba(255,107,107,0.35);animation:dotPop 0.3s ease backwards}
+@keyframes dotPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.ten-frame{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;padding:4px}
+.tf-cell{width:32px;height:32px;border-radius:8px;border:2.5px solid #DDD;display:flex;align-items:center;justify-content:center;font-size:1.2rem;background:white}
+.tf-cell.filled{background:var(--orange);border-color:var(--orange)}
+.nline{display:flex;align-items:center;overflow-x:auto;padding:4px;scrollbar-width:none;width:100%}
+.nline::-webkit-scrollbar{display:none}
+.nl-node{min-width:36px;height:36px;border-radius:10px;border:2px solid #DDD;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:800;color:var(--text);margin:0 2px;background:white;flex-shrink:0}
+.nl-node.start-node{background:var(--blue);border-color:var(--blue);color:white}
+.nl-node.jump-node{background:var(--orange);border-color:var(--orange);color:white}
+.nl-node.ans-node{background:var(--red);border-color:var(--red);color:white;animation:pdPulse 1s ease-in-out infinite}
+.nl-arrow{font-size:1rem;color:var(--orange);margin:0 1px;flex-shrink:0}
+.q-text{font-family:'Fredoka One',cursive;font-size:clamp(1.6rem,6.5vw,2.5rem);text-align:center;color:var(--text);line-height:1.2;margin-bottom:6px;white-space:pre-line}
+.q-hint{font-size:0.78rem;color:var(--muted);font-weight:600;text-align:center}
+.choices{width:calc(100% - 32px);max-width:548px;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px auto 0;flex-shrink:0}
+.choice{background:white;border-radius:18px;padding:15px 8px;text-align:center;font-family:'Fredoka One',cursive;font-size:clamp(1.3rem,5.5vw,1.9rem);color:var(--text);box-shadow:0 5px 0 #DDD8F0,0 8px 18px rgba(45,42,74,0.07);border:2.5px solid transparent;transition:all 0.12s}
+.choice:active:not(.locked){transform:translateY(4px);box-shadow:0 1px 0 #DDD8F0}
+.choice.correct{background:linear-gradient(135deg,#E8FFF5,#C8F5E4);border-color:var(--green);box-shadow:0 5px 0 #04A87A;animation:popBounce 0.4s cubic-bezier(.34,1.56,.64,1)}
+.choice.wrong{background:linear-gradient(135deg,#FFF0F3,#FFCDD5);border-color:var(--pink);box-shadow:0 5px 0 #E04060;animation:shake 0.35s ease}
+.choice.locked{pointer-events:none}
+@keyframes popBounce{0%{transform:scale(1)}50%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.toast{position:fixed;top:42%;left:50%;transform:translate(-50%,-50%) scale(0);z-index:200;font-family:'Fredoka One',cursive;font-size:clamp(1.8rem,7vw,2.8rem);color:white;text-shadow:0 3px 0 rgba(0,0,0,0.2);text-align:center;pointer-events:none;opacity:0;transition:transform 0.28s cubic-bezier(.34,1.56,.64,1),opacity 0.28s}
+.toast.show{transform:translate(-50%,-50%) scale(1);opacity:1}
+.toast.hide{transform:translate(-50%,-50%) scale(0.4);opacity:0}
 
-/* ═══════════════════════════════════════════════
-   SCREENS
-═══════════════════════════════════════════════ */
-.screen {
-  position: absolute; inset: 0; z-index: 1;
-  display: flex; flex-direction: column; align-items: center;
-  overflow-y: auto; overflow-x: hidden;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.3s ease;
-  padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
-}
-.screen.active { opacity: 1; pointer-events: all; }
+/* RESULTS */
+#results{background:linear-gradient(160deg,#FFF0E8,#FFF8F0,#F0F8FF);padding-top:calc(20px + env(safe-area-inset-top,0px));padding-bottom:30px}
+.res-hero{width:100%;max-width:560px;padding:10px 20px;text-align:center}
+.res-mascot{font-size:76px;animation:bob 2s ease-in-out infinite}
+.res-title{font-family:'Fredoka One',cursive;font-size:clamp(1.6rem,6vw,2.4rem);color:var(--red);margin-top:6px}
+.res-card{width:calc(100% - 40px);max-width:520px;background:white;border-radius:26px;padding:22px;box-shadow:var(--shadow);margin:0 auto 14px}
+.res-score{font-family:'Fredoka One',cursive;font-size:4rem;color:var(--red);line-height:1}
+.res-label{font-size:0.8rem;font-weight:700;color:var(--muted);margin-top:2px}
+.stars{font-size:2rem;letter-spacing:4px;margin:8px 0}
+.xp-pill{display:inline-flex;align-items:center;gap:5px;background:#FFF8E6;color:#9A7200;border-radius:20px;padding:7px 16px;font-size:0.85rem;font-weight:800;margin-top:6px}
+.stat-row{display:flex;gap:8px;margin-top:12px}
+.stat-chip{flex:1;background:#F8F7FF;border-radius:14px;padding:11px 8px;text-align:center}
+.stat-val{font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--red)}
+.stat-lbl{font-size:0.68rem;font-weight:700;color:var(--muted);margin-top:2px}
+.levelup-banner{width:calc(100% - 40px);max-width:520px;margin:0 auto 14px;background:linear-gradient(135deg,var(--yellow),var(--orange));border-radius:20px;padding:16px 20px;text-align:center;box-shadow:0 6px 20px rgba(255,159,67,0.35)}
+.lu-title{font-family:'Fredoka One',cursive;font-size:1.6rem;color:white;text-shadow:0 2px 0 rgba(0,0,0,0.15)}
+.lu-sub{font-size:0.82rem;color:rgba(255,255,255,0.9);font-weight:700;margin-top:4px}
+.act-row{width:calc(100% - 40px);max-width:520px;display:flex;flex-direction:column;gap:10px;margin:0 auto}
+.btn-main{background:linear-gradient(135deg,var(--red),var(--orange));color:white;border-radius:18px;padding:15px;font-size:1rem;font-weight:900;box-shadow:0 5px 0 #D44,0 8px 22px rgba(255,107,107,0.3);transition:all 0.12s;width:100%}
+.btn-main:active{transform:translateY(4px);box-shadow:0 1px 0 #D44}
+.btn-sec{background:white;color:var(--text);border-radius:18px;padding:13px;font-size:0.9rem;font-weight:800;box-shadow:var(--shadow-sm);width:100%}
 
-/* ═══════════════════════════════════════════════
-   GLOBAL TOP BAR
-═══════════════════════════════════════════════ */
-.top-bar {
-  width: 100%; max-width: 640px;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 20px 0;
-  flex-shrink: 0;
-  position: relative; z-index: 2;
-}
-.lang-toggle {
-  background: white; border-radius: 30px;
-  padding: 7px 16px; font-size: 0.82rem; font-weight: 800;
-  color: var(--primary); box-shadow: var(--shadow-sm);
-  display: flex; align-items: center; gap: 6px;
-  border: 2px solid rgba(108,99,255,0.15);
-  transition: all 0.2s;
-}
-.lang-toggle:active { transform: scale(0.95); }
-.lang-flag { font-size: 1rem; }
-
-/* ═══════════════════════════════════════════════
-   HOME SCREEN
-═══════════════════════════════════════════════ */
-#home {
-  background: linear-gradient(160deg, #EEF0FF 0%, #F7F0FF 50%, #FFF0F5 100%);
-  padding-bottom: 30px;
-}
-.home-hero {
-  width: 100%; max-width: 640px;
-  padding: 10px 24px 0;
-  text-align: center;
-  position: relative;
-}
-.app-title {
-  font-family: 'Fredoka One', cursive;
-  font-size: clamp(2rem, 7vw, 2.8rem);
-  color: var(--primary);
-  line-height: 1.1;
-  letter-spacing: 0.5px;
-}
-.app-subtitle {
-  font-size: 0.9rem; font-weight: 700;
-  color: var(--muted); margin-top: 4px;
-}
-.mascot-wrap {
-  margin: 10px auto;
-  font-size: 80px;
-  animation: mascotBob 2.8s ease-in-out infinite;
-  display: block; text-align: center;
-  filter: drop-shadow(0 8px 16px rgba(108,99,255,0.2));
-}
-@keyframes mascotBob { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-10px) rotate(2deg)} }
-
-/* Streak & Term badge */
-.meta-row {
-  display: flex; gap: 10px; justify-content: center;
-  padding: 0 24px; margin-top: 4px; flex-wrap: wrap;
-}
-.meta-chip {
-  background: white; border-radius: 30px;
-  padding: 8px 16px; font-size: 0.82rem; font-weight: 800;
-  display: flex; align-items: center; gap: 6px;
-  box-shadow: var(--shadow-sm);
-  color: var(--text);
-}
-.meta-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
-.meta-chip.streak .dot { background: var(--secondary); }
-
-/* Today's lesson card */
-.today-card {
-  width: calc(100% - 48px); max-width: 540px;
-  background: linear-gradient(135deg, var(--primary), #A78BFA);
-  border-radius: 28px; padding: 22px 24px;
-  margin: 14px auto 0;
-  box-shadow: 0 12px 40px rgba(108,99,255,0.35);
-  color: white; position: relative; overflow: hidden;
-}
-.today-card::before {
-  content: ''; position: absolute;
-  width: 180px; height: 180px; border-radius: 50%;
-  background: rgba(255,255,255,0.08);
-  right: -50px; top: -60px;
-}
-.today-label {
-  font-size: 0.75rem; font-weight: 800; letter-spacing: 1.5px;
-  text-transform: uppercase; opacity: 0.75;
-}
-.today-title {
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.6rem; margin-top: 4px;
-  line-height: 1.2;
-}
-.today-meta {
-  font-size: 0.82rem; opacity: 0.8; margin-top: 6px;
-  display: flex; gap: 12px; flex-wrap: wrap;
-}
-.today-meta span { display: flex; align-items: center; gap: 4px; }
-.start-btn {
-  margin-top: 16px;
-  background: white; color: var(--primary);
-  border-radius: 16px; padding: 13px 28px;
-  font-size: 1rem; font-weight: 900;
-  box-shadow: 0 4px 0 rgba(0,0,0,0.15);
-  transition: all 0.12s; display: inline-block;
-}
-.start-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.15); }
-
-/* Week progress */
-.section-title {
-  width: 100%; max-width: 540px;
-  padding: 18px 24px 8px;
-  font-size: 0.8rem; font-weight: 800; letter-spacing: 1.5px;
-  text-transform: uppercase; color: var(--muted);
-}
-.week-grid {
-  display: flex; gap: 8px;
-  padding: 0 24px; width: 100%; max-width: 588px;
-  overflow-x: auto; scrollbar-width: none;
-}
-.week-grid::-webkit-scrollbar { display: none; }
-.day-pill {
-  flex-shrink: 0;
-  background: white; border-radius: 16px;
-  padding: 12px 10px; min-width: 60px;
-  text-align: center; box-shadow: var(--shadow-sm);
-  border: 2px solid transparent;
-  transition: all 0.2s;
-}
-.day-pill.done { background: linear-gradient(135deg, #E8F5E9, #C8E6C9); border-color: var(--accent); }
-.day-pill.today { border-color: var(--primary); background: linear-gradient(135deg, #EEF0FF, #E8E6FF); }
-.day-pill.locked { opacity: 0.45; }
-.day-name { font-size: 0.72rem; font-weight: 800; color: var(--muted); text-transform: uppercase; }
-.day-icon { font-size: 1.4rem; margin: 4px 0; }
-.day-score { font-size: 0.72rem; font-weight: 700; color: var(--text); }
-
-/* Curriculum overview cards */
-.curriculum-row {
-  display: flex; gap: 12px;
-  padding: 0 24px; width: 100%; max-width: 588px;
-  overflow-x: auto; scrollbar-width: none; flex-wrap: nowrap;
-}
-.curriculum-row::-webkit-scrollbar { display: none; }
-.curr-card {
-  flex-shrink: 0; min-width: 130px;
-  background: white; border-radius: 20px;
-  padding: 16px 14px; text-align: center;
-  box-shadow: var(--shadow-sm);
-  cursor: pointer; transition: all 0.2s;
-  border: 2px solid transparent;
-}
-.curr-card:active { transform: scale(0.96); }
-.curr-card.active-strand { border-color: var(--primary); }
-.curr-icon { font-size: 2rem; }
-.curr-name { font-size: 0.78rem; font-weight: 800; color: var(--text); margin-top: 6px; }
-.curr-prog {
-  height: 5px; background: #EEF0FF; border-radius: 10px;
-  margin-top: 8px; overflow: hidden;
-}
-.curr-prog-fill { height: 100%; background: var(--primary); border-radius: 10px; transition: width 0.6s ease; }
-
-/* ═══════════════════════════════════════════════
-   LESSON SCREEN
-═══════════════════════════════════════════════ */
-#lesson { background: var(--bg); }
-.lesson-header {
-  width: 100%; max-width: 600px;
-  padding: 14px 20px; display: flex;
-  align-items: center; gap: 12px;
-  flex-shrink: 0; z-index: 2;
-}
-.back-btn {
-  width: 40px; height: 40px; border-radius: 14px;
-  background: white; box-shadow: var(--shadow-sm);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem; color: var(--primary); font-weight: 900;
-  transition: all 0.12s;
-}
-.back-btn:active { transform: scale(0.92); }
-.lesson-title-wrap { flex: 1; }
-.lesson-heading {
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.1rem; color: var(--text); line-height: 1.1;
-}
-.lesson-sub { font-size: 0.75rem; color: var(--muted); font-weight: 700; }
-.xp-display {
-  background: var(--sun); border-radius: 20px;
-  padding: 6px 12px; font-size: 0.82rem; font-weight: 900;
-  color: #7A5C00; display: flex; align-items: center; gap: 4px;
-}
-
-/* Progress strip */
-.progress-strip {
-  width: calc(100% - 40px); max-width: 560px;
-  margin: 0 auto 14px;
-  background: white; border-radius: 20px; padding: 4px;
-  box-shadow: var(--shadow-sm); display: flex; gap: 4px;
-}
-.prog-dot {
-  flex: 1; height: 10px; border-radius: 10px;
-  background: #EEF0FF; transition: background 0.4s ease;
-}
-.prog-dot.done { background: var(--accent); }
-.prog-dot.current { background: var(--primary); animation: progPulse 1s ease-in-out infinite; }
-@keyframes progPulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
-
-/* Question card */
-.q-card {
-  width: calc(100% - 40px); max-width: 560px;
-  background: white; border-radius: 28px;
-  padding: 24px 22px; margin: 0 auto;
-  box-shadow: var(--shadow);
-  flex-shrink: 0; position: relative; overflow: hidden;
-}
-.q-strand-badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  background: #EEF0FF; color: var(--primary);
-  border-radius: 20px; padding: 4px 12px;
-  font-size: 0.72rem; font-weight: 800;
-  letter-spacing: 0.8px; text-transform: uppercase;
-  margin-bottom: 12px;
-}
-.q-naplan-badge {
-  display: inline-flex; align-items: center; gap: 4px;
-  background: #FFF8E6; color: #B8860B;
-  border-radius: 20px; padding: 4px 10px;
-  font-size: 0.68rem; font-weight: 800;
-  margin-left: 6px;
-}
-.q-visual {
-  min-height: 70px;
-  display: flex; flex-wrap: wrap;
-  justify-content: center; align-items: center;
-  gap: 5px; padding: 10px;
-  background: #FAFAFA; border-radius: 16px;
-  margin-bottom: 14px; font-size: clamp(1.8rem,6vw,2.4rem);
-}
-.q-text {
-  font-family: 'Fredoka One', cursive;
-  font-size: clamp(1.8rem,7vw,2.8rem);
-  text-align: center; color: var(--text);
-  line-height: 1.15; margin-bottom: 8px;
-}
-.q-hint {
-  font-size: 0.82rem; color: var(--muted); font-weight: 600;
-  text-align: center; margin-top: 4px;
-}
-
-/* Answer choices */
-.choices {
-  width: calc(100% - 40px); max-width: 560px;
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 10px; margin: 12px auto 0; flex-shrink: 0;
-}
-.choice-btn {
-  background: white; border-radius: 20px;
-  padding: 16px 10px; text-align: center;
-  font-family: 'Fredoka One', cursive;
-  font-size: clamp(1.4rem,5.5vw,2rem);
-  color: var(--text);
-  box-shadow: 0 5px 0 #D8D6FF, 0 8px 20px rgba(108,99,255,0.08);
-  border: 2.5px solid transparent;
-  transition: all 0.12s;
-}
-.choice-btn:active:not(.locked) { transform: translateY(4px); box-shadow: 0 1px 0 #D8D6FF; }
-.choice-btn.correct {
-  background: linear-gradient(135deg, #E8FFF5, #C8F5E4);
-  border-color: var(--accent);
-  box-shadow: 0 5px 0 #2DB88A;
-  animation: popBounce 0.45s cubic-bezier(.34,1.56,.64,1);
-}
-.choice-btn.wrong {
-  background: linear-gradient(135deg, #FFF0F3, #FFCDD5);
-  border-color: var(--secondary);
-  box-shadow: 0 5px 0 #E04060;
-  animation: shake 0.35s ease;
-}
-.choice-btn.locked { pointer-events: none; }
-@keyframes popBounce { 0%{transform:scale(1)} 50%{transform:scale(1.07)} 100%{transform:scale(1)} }
-@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-7px)} 75%{transform:translateX(7px)} }
-
-/* Feedback toast */
-.toast {
-  position: fixed; top: 50%; left: 50%;
-  transform: translate(-50%,-50%) scale(0);
-  z-index: 100;
-  font-family: 'Fredoka One', cursive;
-  font-size: clamp(2rem, 8vw, 3rem);
-  color: white; text-shadow: 0 3px 0 rgba(0,0,0,0.25);
-  text-align: center; pointer-events: none;
-  transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), opacity 0.3s;
-  opacity: 0;
-}
-.toast.show { transform: translate(-50%,-50%) scale(1); opacity: 1; }
-.toast.hide { transform: translate(-50%,-50%) scale(0.5); opacity: 0; }
-
-/* ═══════════════════════════════════════════════
-   RESULTS SCREEN
-═══════════════════════════════════════════════ */
-#results {
-  background: linear-gradient(160deg, #EEF0FF 0%, #F7F0FF 50%, #FFF0F5 100%);
-  justify-content: flex-start; padding-bottom: 40px;
-}
-.results-hero {
-  width: 100%; max-width: 580px;
-  padding: 20px 24px;
-  text-align: center;
-}
-.results-emoji { font-size: 80px; animation: mascotBob 2s ease-in-out infinite; }
-.results-title {
-  font-family: 'Fredoka One', cursive;
-  font-size: clamp(1.8rem,7vw,2.6rem);
-  color: var(--primary); margin-top: 8px;
-}
-.results-card {
-  width: calc(100% - 48px); max-width: 540px;
-  background: white; border-radius: 28px;
-  padding: 24px; box-shadow: var(--shadow);
-  margin: 0 auto 16px;
-}
-.score-big {
-  font-family: 'Fredoka One', cursive;
-  font-size: 4.5rem; color: var(--primary); line-height: 1;
-}
-.score-label { font-size: 0.85rem; font-weight: 700; color: var(--muted); margin-top: 2px; }
-.star-row { font-size: 2.2rem; margin: 10px 0; letter-spacing: 4px; }
-.xp-earned {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: #FFF8E6; color: #9A7200; border-radius: 20px;
-  padding: 8px 18px; font-size: 0.9rem; font-weight: 800;
-  margin-top: 8px;
-}
-.stat-row {
-  display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap;
-}
-.stat-chip {
-  flex: 1; min-width: 90px; background: #F8F7FF;
-  border-radius: 16px; padding: 12px 10px; text-align: center;
-}
-.stat-val {
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.5rem; color: var(--primary);
-}
-.stat-lbl { font-size: 0.72rem; font-weight: 700; color: var(--muted); margin-top: 2px; }
-
-.action-row {
-  width: calc(100% - 48px); max-width: 540px;
-  display: flex; flex-direction: column; gap: 10px;
-  margin: 0 auto;
-}
-.btn-primary {
-  background: linear-gradient(135deg, var(--primary), #A78BFA);
-  color: white; border-radius: 20px; padding: 16px;
-  font-size: 1.1rem; font-weight: 900;
-  box-shadow: 0 5px 0 var(--primary-dark), 0 8px 24px rgba(108,99,255,0.3);
-  transition: all 0.12s; width: 100%;
-}
-.btn-primary:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--primary-dark); }
-.btn-secondary {
-  background: white; color: var(--text);
-  border-radius: 20px; padding: 14px;
-  font-size: 1rem; font-weight: 800;
-  box-shadow: var(--shadow-sm); width: 100%;
-}
-
-/* ═══════════════════════════════════════════════
-   PROGRESS SCREEN
-═══════════════════════════════════════════════ */
-#progress-screen {
-  background: var(--bg);
-  padding-bottom: 40px;
-}
-.progress-header {
-  width: 100%; max-width: 600px;
-  padding: 16px 20px 0;
-  display: flex; align-items: center; gap: 12px;
-}
-.progress-title {
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.5rem; color: var(--primary);
-}
-.stats-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 12px; width: calc(100% - 40px);
-  max-width: 560px; margin: 16px auto 0;
-}
-.stats-big-card {
-  background: white; border-radius: 22px;
-  padding: 18px 16px; box-shadow: var(--shadow-sm);
-  text-align: center;
-}
-.stats-big-card.accent { background: linear-gradient(135deg, var(--primary), #A78BFA); }
-.stats-big-card.accent .stat-val { color: white; }
-.stats-big-card.accent .stat-lbl { color: rgba(255,255,255,0.8); }
-.strand-progress-list {
-  width: calc(100% - 40px); max-width: 560px;
-  margin: 16px auto 0; display: flex; flex-direction: column; gap: 10px;
-}
-.strand-row {
-  background: white; border-radius: 18px;
-  padding: 14px 18px; box-shadow: var(--shadow-sm);
-  display: flex; align-items: center; gap: 12px;
-}
-.strand-icon { font-size: 1.6rem; }
-.strand-info { flex: 1; }
-.strand-name { font-weight: 800; font-size: 0.9rem; }
-.strand-bar-wrap { height: 7px; background: #EEF0FF; border-radius: 10px; margin-top: 5px; overflow: hidden; }
-.strand-bar { height: 100%; border-radius: 10px; background: var(--primary); transition: width 0.6s; }
-.strand-pct { font-family: 'Fredoka One', cursive; font-size: 1rem; color: var(--primary); }
-
-/* Calendar heatmap */
-.calendar-wrap {
-  width: calc(100% - 40px); max-width: 560px;
-  background: white; border-radius: 22px;
-  padding: 18px; box-shadow: var(--shadow-sm);
-  margin: 16px auto 0;
-}
-.cal-title { font-weight: 800; font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
-.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
-.cal-cell {
-  aspect-ratio: 1; border-radius: 8px;
-  background: #EEF0FF; display: flex;
-  align-items: center; justify-content: center;
-  font-size: 0.65rem; font-weight: 700; color: var(--muted);
-}
-.cal-cell.done-low { background: #C8E6C9; color: #2E7D32; }
-.cal-cell.done-mid { background: #81C784; color: white; }
-.cal-cell.done-high { background: #43A047; color: white; }
-.cal-cell.today { border: 2px solid var(--primary); }
-
-/* ═══════════════════════════════════════════════
-   BOTTOM NAV
-═══════════════════════════════════════════════ */
-.bottom-nav {
-  position: fixed; bottom: 0; left: 0; right: 0;
-  height: calc(64px + env(safe-area-inset-bottom, 0px));
-  background: white; z-index: 50;
-  display: flex; align-items: flex-start; justify-content: space-around;
-  padding-top: 8px;
-  box-shadow: 0 -4px 24px rgba(108,99,255,0.1);
-  border-top: 1.5px solid rgba(108,99,255,0.08);
-}
-.nav-btn {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; gap: 3px; padding: 4px 0;
-  background: none; color: var(--muted);
-  transition: color 0.2s; font-weight: 700;
-  font-size: 0.68rem;
-}
-.nav-btn .nav-icon { font-size: 1.5rem; transition: transform 0.2s; }
-.nav-btn.active { color: var(--primary); }
-.nav-btn.active .nav-icon { transform: scale(1.18); }
-
-/* Spacer for bottom nav */
-.nav-spacer { height: calc(76px + env(safe-area-inset-bottom, 0px)); flex-shrink: 0; }
-
-/* ═══════════════════════════════════════════════
-   CONFETTI
-═══════════════════════════════════════════════ */
-.confetti-piece {
-  position: fixed; pointer-events: none; z-index: 200;
-  border-radius: 3px;
-  animation: confFall linear forwards;
-}
-@keyframes confFall {
-  0%   { transform: translateY(-10px) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(105vh) rotate(600deg); opacity: 0; }
-}
-
-/* ═══════════════════════════════════════════════
-   UTILITIES
-═══════════════════════════════════════════════ */
-.text-center { text-align: center; }
-.mt-8 { margin-top: 8px; }
-.mt-16 { margin-top: 16px; }
-.hidden { display: none !important; }
+/* PROGRESS */
+#prog-screen{background:var(--bg);padding-top:calc(56px + env(safe-area-inset-top,0px));padding-bottom:30px}
+.prog-title{font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--red);padding:0 20px;width:100%;max-width:580px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:calc(100% - 40px);max-width:540px;margin:14px auto 0}
+.stat-big{background:white;border-radius:20px;padding:16px;text-align:center;box-shadow:var(--shadow-sm)}
+.stat-big.accent{background:linear-gradient(135deg,var(--red),var(--orange))}
+.stat-big.accent .stat-val{color:white}
+.stat-big.accent .stat-lbl{color:rgba(255,255,255,0.85)}
+.strand-list{width:calc(100% - 40px);max-width:540px;margin:14px auto 0;display:flex;flex-direction:column;gap:8px}
+.strand-row{background:white;border-radius:16px;padding:12px 16px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:10px}
+.sr-icon{font-size:1.5rem;flex-shrink:0}
+.sr-info{flex:1}
+.sr-name{font-weight:800;font-size:0.85rem}
+.sr-bar-wrap{height:6px;background:#EEE;border-radius:10px;margin-top:4px;overflow:hidden}
+.sr-bar{height:100%;border-radius:10px;background:var(--red);transition:width 0.6s}
+.sr-pct{font-family:'Fredoka One',cursive;font-size:0.95rem;color:var(--red);flex-shrink:0}
+.level-journey{width:calc(100% - 40px);max-width:540px;margin:14px auto 0;background:white;border-radius:20px;padding:16px;box-shadow:var(--shadow-sm)}
+.lj-title{font-size:0.72rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.lj-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.lj-node{border-radius:12px;padding:8px 4px;text-align:center;background:#F5F3FF}
+.lj-node.done{background:linear-gradient(135deg,#E8FFF5,#C8F5E4)}
+.lj-node.current{background:linear-gradient(135deg,#FFF0EC,#FFE0E0);border:2px solid var(--red)}
+.lj-node.locked{opacity:0.35}
+.lj-num{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--text)}
+.lj-name{font-size:0.56rem;font-weight:700;color:var(--muted);margin-top:2px;line-height:1.2}
+.conf{position:fixed;pointer-events:none;z-index:300;border-radius:3px;animation:confFall linear forwards}
+@keyframes confFall{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(105vh) rotate(600deg);opacity:0}}
 </style>
 </head>
 <body>
-
 <div id="app">
-  <!-- Background blobs -->
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
-  <div class="blob blob-3"></div>
+<button class="lang-btn" id="lang-btn" onclick="toggleLang()"><span id="lang-flag">🇰🇷</span> <span id="lang-lbl">한국어</span></button>
 
-  <!-- ══════════════ HOME SCREEN ══════════════ -->
-  <div class="screen active" id="home">
-    <div class="top-bar">
-      <div></div>
-      <button class="lang-toggle" onclick="toggleLang()">
-        <span class="lang-flag" id="lang-flag">🇰🇷</span>
-        <span id="lang-label">한국어</span>
-      </button>
-    </div>
-
-    <div class="home-hero">
-      <div class="app-title" id="txt-app-title">Arin's Maths Adventure</div>
-      <div class="app-subtitle" id="txt-app-sub">Year 1 · Brisbane · AC Version 9</div>
-      <span class="mascot-wrap">🦄</span>
-    </div>
-
-    <div class="meta-row">
-      <div class="meta-chip streak">
-        <div class="dot"></div>
-        <span id="streak-label">🔥 <span id="streak-count">0</span> day streak</span>
-      </div>
-      <div class="meta-chip">
-        <div class="dot"></div>
-        <span id="term-label">Term 2</span>
-      </div>
-      <div class="meta-chip">
-        ⭐ <span id="total-xp">0</span> XP
-      </div>
-    </div>
-
-    <!-- Today's lesson -->
-    <div class="today-card" id="today-card">
-      <div class="today-label" id="txt-today-label">TODAY'S LESSON</div>
-      <div class="today-title" id="today-lesson-title">Loading...</div>
-      <div class="today-meta" id="today-meta">
-        <span>📚 <span id="today-strand"></span></span>
-        <span>❓ <span id="today-qcount">8</span> <span id="txt-questions">questions</span></span>
-        <span>⏱ ~5 min</span>
-      </div>
-      <button class="start-btn" id="start-lesson-btn" onclick="startTodayLesson()">
-        <span id="txt-start-btn">▶ Start Lesson</span>
-      </button>
-    </div>
-
-    <!-- This week -->
-    <div class="section-title" id="txt-this-week">THIS WEEK</div>
-    <div class="week-grid" id="week-grid"></div>
-
-    <!-- Curriculum strands -->
-    <div class="section-title" id="txt-strands">CURRICULUM STRANDS</div>
-    <div class="curriculum-row" id="curriculum-row"></div>
-
-    <div class="nav-spacer"></div>
+<!-- HOME -->
+<div class="screen active" id="home">
+  <div class="home-top">
+    <div class="home-title" id="h-title">Arin's Maths Adventure</div>
+    <div class="home-sub">Year 1 · Brisbane · AC Version 9</div>
+    <span class="mascot">🦄</span>
   </div>
-
-  <!-- ══════════════ LESSON SCREEN ══════════════ -->
-  <div class="screen" id="lesson">
-    <div class="lesson-header">
-      <button class="back-btn" onclick="goHome()">←</button>
-      <div class="lesson-title-wrap">
-        <div class="lesson-heading" id="lesson-heading">Lesson</div>
-        <div class="lesson-sub" id="lesson-sub">Week 1 · Day 1</div>
-      </div>
-      <div class="xp-display">⭐ <span id="session-xp">0</span></div>
-    </div>
-
-    <div class="progress-strip" id="progress-strip"></div>
-
-    <div class="q-card" id="q-card">
-      <div>
-        <span class="q-strand-badge" id="q-strand-badge">Number</span>
-        <span class="q-naplan-badge" id="q-naplan-badge" style="display:none">📋 NAPLAN prep</span>
-      </div>
-      <div class="q-visual" id="q-visual"></div>
-      <div class="q-text" id="q-text"></div>
-      <div class="q-hint" id="q-hint"></div>
-    </div>
-
-    <div class="choices" id="choices"></div>
-    <div class="nav-spacer"></div>
+  <div class="chips">
+    <div class="chip"><div class="chip-dot" style="background:var(--orange)"></div><span id="h-streak">🔥 0 day streak</span></div>
+    <div class="chip"><div class="chip-dot" style="background:var(--red)"></div><span id="h-level">Level 1</span></div>
+    <div class="chip">⭐ <span id="h-xp">0</span> XP</div>
   </div>
-
-  <!-- ══════════════ RESULTS SCREEN ══════════════ -->
-  <div class="screen" id="results">
-    <div class="results-hero">
-      <div class="results-emoji" id="results-emoji">🎉</div>
-      <div class="results-title" id="results-title">Lesson Complete!</div>
+  <div class="level-card">
+    <div class="lc-label" id="h-today-lbl">TODAY'S SESSION</div>
+    <div class="lc-title" id="h-today-title">Loading...</div>
+    <div class="lc-meta">
+      <span>⚡ <span id="h-warmup-lbl">Warmup</span>: 10</span>
+      <span>📚 <span id="h-main-lbl">Main</span>: 10</span>
+      <span>⏱ ~15 min</span>
     </div>
-    <div class="results-card">
-      <div class="score-big" id="final-score">0</div>
-      <div class="score-label" id="txt-score-label">points scored</div>
-      <div class="star-row" id="star-row">⭐⭐⭐</div>
-      <div class="xp-earned" id="xp-earned">⭐ +0 XP earned</div>
-      <div class="stat-row">
-        <div class="stat-chip">
-          <div class="stat-val" id="stat-correct">0</div>
-          <div class="stat-lbl" id="txt-correct">Correct</div>
-        </div>
-        <div class="stat-chip">
-          <div class="stat-val" id="stat-accuracy">0%</div>
-          <div class="stat-lbl" id="txt-accuracy">Accuracy</div>
-        </div>
-        <div class="stat-chip">
-          <div class="stat-val" id="stat-streak">0</div>
-          <div class="stat-lbl" id="txt-streak">Day Streak</div>
-        </div>
-      </div>
-    </div>
-    <div class="action-row">
-      <button class="btn-primary" onclick="goHome()"><span id="txt-home-btn">🏠 Back to Home</span></button>
-      <button class="btn-secondary" onclick="replayLesson()"><span id="txt-replay-btn">🔄 Try Again</span></button>
-    </div>
-    <div class="nav-spacer"></div>
+    <div class="lc-progress"><div class="lc-progress-fill" id="h-level-prog" style="width:0%"></div></div>
+    <div class="lc-progress-label" id="h-prog-label"></div>
+    <button class="start-btn" onclick="startSession()"><span id="h-start-btn">▶ Start</span></button>
   </div>
-
-  <!-- ══════════════ PROGRESS SCREEN ══════════════ -->
-  <div class="screen" id="progress-screen">
-    <div class="progress-header">
-      <div class="progress-title" id="txt-progress-title">My Progress</div>
-    </div>
-    <div class="stats-grid">
-      <div class="stats-big-card accent">
-        <div class="stat-val" id="prog-total-xp">0</div>
-        <div class="stat-lbl">Total XP</div>
-      </div>
-      <div class="stats-big-card">
-        <div class="stat-val" id="prog-streak"><span style="color:var(--secondary)">🔥</span> 0</div>
-        <div class="stat-lbl" id="txt-best-streak">Best Streak</div>
-      </div>
-      <div class="stats-big-card">
-        <div class="stat-val" id="prog-lessons">0</div>
-        <div class="stat-lbl" id="txt-lessons-done">Lessons Done</div>
-      </div>
-      <div class="stats-big-card">
-        <div class="stat-val" id="prog-accuracy">0%</div>
-        <div class="stat-lbl" id="txt-overall-acc">Overall Accuracy</div>
-      </div>
-    </div>
-    <div class="strand-progress-list" id="strand-progress-list"></div>
-    <div class="calendar-wrap">
-      <div class="cal-title" id="txt-cal-title">ACTIVITY — MAY 2025</div>
-      <div class="cal-grid" id="cal-grid"></div>
-    </div>
-    <div class="nav-spacer"></div>
-  </div>
-
-  <!-- ══════════════ BOTTOM NAV ══════════════ -->
-  <nav class="bottom-nav">
-    <button class="nav-btn active" id="nav-home" onclick="showScreen('home'); setNav('nav-home')">
-      <span class="nav-icon">🏠</span>
-      <span id="nav-home-lbl">Home</span>
-    </button>
-    <button class="nav-btn" id="nav-progress" onclick="showScreen('progress-screen'); setNav('nav-progress'); renderProgress()">
-      <span class="nav-icon">📊</span>
-      <span id="nav-progress-lbl">Progress</span>
-    </button>
-    <button class="nav-btn" id="nav-schedule" onclick="showSchedule()">
-      <span class="nav-icon">📅</span>
-      <span id="nav-schedule-lbl">Schedule</span>
-    </button>
-  </nav>
+  <div class="sec-title" id="h-week-lbl">THIS WEEK</div>
+  <div class="week-strip" id="week-strip"></div>
+  <div class="sec-title" id="h-strands-lbl">CURRICULUM STRANDS</div>
+  <div class="strand-grid" id="strand-grid"></div>
+  <div class="nav-spacer"></div>
 </div>
 
-<!-- Toast -->
+<!-- LESSON -->
+<div class="screen" id="lesson">
+  <div class="lesson-hdr">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <div class="lhdr-info">
+      <div class="lhdr-title" id="l-title">Session</div>
+      <div class="lhdr-sub" id="l-sub">Warmup · Q1</div>
+    </div>
+    <div class="xp-badge">⭐ <span id="l-xp">0</span></div>
+  </div>
+  <div class="phase-bar">
+    <div class="phase-pill" id="ph-warmup"></div>
+    <div class="phase-label" id="ph-label">Warmup</div>
+    <div class="phase-pill" id="ph-main"></div>
+  </div>
+  <div class="prog-dots" id="prog-dots"></div>
+  <div class="q-card">
+    <div class="q-badges" id="q-badges"></div>
+    <div class="q-visual" id="q-visual"></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="q-hint" id="q-hint"></div>
+  </div>
+  <div class="choices" id="choices"></div>
+  <div class="nav-spacer"></div>
+</div>
+
+<!-- RESULTS -->
+<div class="screen" id="results">
+  <div class="res-hero">
+    <div class="res-mascot" id="r-mascot">🎉</div>
+    <div class="res-title" id="r-title">Session Complete!</div>
+  </div>
+  <div class="res-card">
+    <div class="res-score" id="r-score">0</div>
+    <div class="res-label" id="r-score-lbl">points</div>
+    <div class="stars" id="r-stars">⭐⭐⭐</div>
+    <div class="xp-pill" id="r-xp">⭐ +0 XP</div>
+    <div class="stat-row">
+      <div class="stat-chip"><div class="stat-val" id="r-correct">0/20</div><div class="stat-lbl" id="r-correct-lbl">Correct</div></div>
+      <div class="stat-chip"><div class="stat-val" id="r-acc">0%</div><div class="stat-lbl" id="r-acc-lbl">Accuracy</div></div>
+      <div class="stat-chip"><div class="stat-val" id="r-streak">0</div><div class="stat-lbl" id="r-streak-lbl">Streak</div></div>
+    </div>
+  </div>
+  <div class="levelup-banner" id="levelup-banner" style="display:none">
+    <div class="lu-title" id="lu-title">🎉 Level Up!</div>
+    <div class="lu-sub" id="lu-sub"></div>
+  </div>
+  <div class="act-row">
+    <button class="btn-main" onclick="goHome()"><span id="r-home-btn">🏠 Home</span></button>
+    <button class="btn-sec" onclick="replaySession()"><span id="r-replay-btn">🔄 Try Again</span></button>
+  </div>
+  <div class="nav-spacer"></div>
+</div>
+
+<!-- PROGRESS -->
+<div class="screen" id="prog-screen">
+  <div class="prog-title" id="p-title">My Progress</div>
+  <div class="stats-grid">
+    <div class="stat-big accent"><div class="stat-val" id="p-xp">0</div><div class="stat-lbl">Total XP</div></div>
+    <div class="stat-big"><div class="stat-val" id="p-streak" style="color:var(--orange)">🔥 0</div><div class="stat-lbl" id="p-streak-lbl">Best Streak</div></div>
+    <div class="stat-big"><div class="stat-val" id="p-sessions">0</div><div class="stat-lbl" id="p-sessions-lbl">Sessions Done</div></div>
+    <div class="stat-big"><div class="stat-val" id="p-acc">0%</div><div class="stat-lbl" id="p-acc-lbl">Accuracy</div></div>
+  </div>
+  <div class="strand-list" id="strand-list"></div>
+  <div class="level-journey">
+    <div class="lj-title" id="lj-title">LEVEL JOURNEY</div>
+    <div class="lj-grid" id="lj-grid"></div>
+  </div>
+  <div class="nav-spacer"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bnav">
+  <button class="bnav-btn active" id="nav-home" onclick="goHome();setNav('nav-home')">
+    <span class="bicon">🏠</span><span id="nav-home-lbl">Home</span>
+  </button>
+  <button class="bnav-btn" id="nav-prog" onclick="showScreen('prog-screen');setNav('nav-prog');renderProgress()">
+    <span class="bicon">📊</span><span id="nav-prog-lbl">Progress</span>
+  </button>
+</nav>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
-/* ════════════════════════════════════════════════
-   STORAGE (localStorage — persists on device)
-════════════════════════════════════════════════ */
-const STORE_KEY = 'arin_maths_v2';
-function loadData() {
-  try { return JSON.parse(localStorage.getItem(STORE_KEY)) || defaultData(); }
-  catch(e) { return defaultData(); }
-}
-function saveData(d) { localStorage.setItem(STORE_KEY, JSON.stringify(d)); }
-function defaultData() {
-  return {
-    xp: 0, streak: 0, bestStreak: 0,
-    lastDate: null, lang: 'en',
-    lessonsCompleted: {},   // key: "T2W1D1" → {score, correct, total, date}
-    strandXP: { Number:0, Algebra:0, Measurement:0, Space:0, Statistics:0 },
-    activityLog: {}         // key: "YYYY-MM-DD" → score%
-  };
-}
-let DATA = loadData();
+/* ── STORAGE ── */
+const SK='arin_v3';
+function load(){try{return JSON.parse(localStorage.getItem(SK))||def();}catch(e){return def();}}
+function save(d){localStorage.setItem(SK,JSON.stringify(d));}
+function def(){return{xp:0,streak:0,bestStreak:0,lastDate:null,lang:'en',currentLevel:1,levelHistory:{},sessions:{},strandXP:{Number:0,Algebra:0,Measurement:0,Space:0,Statistics:0},totalCorrect:0,totalQuestions:0};}
+let D=load();
 
-/* ════════════════════════════════════════════════
-   LANGUAGE
-════════════════════════════════════════════════ */
-let lang = DATA.lang || 'en';
-const T = {
-  en: {
-    appTitle: "Arin's Maths Adventure",
-    appSub: "Year 1 · Brisbane · AC Version 9",
-    todayLabel: "TODAY'S LESSON",
-    questions: "questions",
-    startBtn: "▶ Start Lesson",
-    thisWeek: "THIS WEEK",
-    strands: "CURRICULUM STRANDS",
-    progressTitle: "My Progress",
-    bestStreak: "Best Streak",
-    lessonsDone: "Lessons Done",
-    overallAcc: "Overall Accuracy",
-    correct: "Correct",
-    accuracy: "Accuracy",
-    streak: "Day Streak",
-    homeBtn: "🏠 Back to Home",
-    replayBtn: "🔄 Try Again",
-    scoreLabel: "points scored",
-    navHome: "Home",
-    navProgress: "Progress",
-    navSchedule: "Schedule",
-    lessonComplete: "Lesson Complete!",
-    perfect: "Perfect! 🌟",
-    great: "Great Work! ⭐",
-    good: "Good Job! 👍",
-    tryAgain: "Keep Going! 💪",
-    calTitle: "ACTIVITY — MAY 2025",
-    dayNames: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
-    strandNames: { Number:"Number", Algebra:"Algebra", Measurement:"Measurement", Space:"Space", Statistics:"Statistics" },
-    naplanLabel: "📋 NAPLAN prep",
-    xpEarned: (n) => `⭐ +${n} XP earned`,
-    streakLabel: (n) => `🔥 ${n} day streak`,
-    correct_fb: ["✅ Correct!", "⭐ Well done!", "🌟 Brilliant!", "🎉 Perfect!"],
-    wrong_fb: ["❌ Try again!", "💡 Not quite!", "🤔 Almost!"],
+/* ── LANGUAGE ── */
+let lang=D.lang||'en';
+const TX={
+  en:{
+    appTitle:"Arin's Maths Adventure",todayLbl:"TODAY'S SESSION",startBtn:'▶ Start',weekLbl:'THIS WEEK',strandsLbl:'CURRICULUM STRANDS',
+    warmupLbl:'Warmup',mainLbl:'Main',progTitle:'My Progress',bestStreak:'Best Streak',sessionsDone:'Sessions Done',overallAcc:'Accuracy',
+    correct:'Correct',accuracy:'Accuracy',streakLbl:'Streak',homeBtn:'🏠 Home',replayBtn:'🔄 Try Again',scoreLbl:'points',
+    navHome:'Home',navProg:'Progress',levelJourney:'LEVEL JOURNEY',
+    xpEarned:n=>`⭐ +${n} XP`,streakTxt:n=>`🔥 ${n} day streak`,levelTxt:n=>`Level ${n}`,
+    progLbl:(done,needed)=>`${done}/${needed} passes to level up`,
+    correct_fb:['✅ Correct!','⭐ Well done!','🌟 Brilliant!','🎉 Perfect!','💪 You got it!'],
+    wrong_fb:['💡 Not quite!','🤔 Almost there!','😊 Keep going!'],
+    sessionComplete:'Session Complete!',
+    perfect:'Perfect! 🌟',great:'Great Work! ⭐',good:'Good Job! 👍',tryMore:'Keep Trying! 💪',
+    levelUpTitle:'Level Up! 🎉',levelUpSub:(n,name)=>`Now on Level ${n}: ${name}!`,
+    levelDownTitle:'💪 Let\'s practise more!',levelDownSub:(n,name)=>`Back to Level ${n}: ${name}`,
+    strandNames:{Number:'Number',Algebra:'Algebra',Measurement:'Measurement',Space:'Space',Statistics:'Statistics'},
+    levelNames:['1~5 Adding','1~5 Taking Away','1~10 Adding','1~10 Taking Away','Make 10','Cross 10 Adding','1~20 Adding','1~20 Taking Away','Mixed +/−','NAPLAN Challenge'],
+    dayNames:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+    warmupTitle:'⚡ Warmup',mainTitle:'📚 Learning',naplanBadge:'📋 NAPLAN',
+    hintDots:'Count the dots carefully!',hintFrame:'Count the filled (orange) boxes!',hintLine:'Count the jumps on the number line!',
+    hintBlank:'What number fills the gap?',hintWord:'Read carefully, then solve!',hintAdd:'Add them together!',
+    hintSub:'Take the smaller from the bigger!',hintMake10:'What number makes 10 with this?',hintSkip:'What comes next in the pattern?',hintShape:'Look at the shape carefully!',
   },
-  ko: {
-    appTitle: "아린이의 수학 나라",
-    appSub: "Year 1 · 브리즈번 · 호주 정규 과정",
-    todayLabel: "오늘의 학습",
-    questions: "문제",
-    startBtn: "▶ 시작하기",
-    thisWeek: "이번 주",
-    strands: "학습 영역",
-    progressTitle: "나의 기록",
-    bestStreak: "최장 연속",
-    lessonsDone: "완료 수업",
-    overallAcc: "전체 정확도",
-    correct: "정답",
-    accuracy: "정확도",
-    streak: "연속 학습일",
-    homeBtn: "🏠 홈으로",
-    replayBtn: "🔄 다시 하기",
-    scoreLabel: "점 획득",
-    navHome: "홈",
-    navProgress: "기록",
-    navSchedule: "일정",
-    lessonComplete: "수업 완료!",
-    perfect: "완벽해요! 🌟",
-    great: "잘했어요! ⭐",
-    good: "좋아요! 👍",
-    tryAgain: "도전! 💪",
-    calTitle: "활동 기록 — 2025년 5월",
-    dayNames: ["월","화","수","목","금","토","일"],
-    strandNames: { Number:"수와 연산", Algebra:"대수/패턴", Measurement:"측정", Space:"공간/도형", Statistics:"통계" },
-    naplanLabel: "📋 나플란 대비",
-    xpEarned: (n) => `⭐ +${n} XP 획득`,
-    streakLabel: (n) => `🔥 ${n}일 연속 학습`,
-    correct_fb: ["✅ 정답!", "⭐ 잘했어!", "🌟 훌륭해!", "🎉 완벽!"],
-    wrong_fb: ["❌ 다시 해봐!", "💡 아쉬워!", "🤔 거의 다 왔어!"],
+  ko:{
+    appTitle:'아린이의 수학 나라',todayLbl:'오늘의 학습',startBtn:'▶ 시작',weekLbl:'이번 주',strandsLbl:'학습 영역',
+    warmupLbl:'워밍업',mainLbl:'메인',progTitle:'나의 기록',bestStreak:'최장 연속',sessionsDone:'완료 세션',overallAcc:'정확도',
+    correct:'정답',accuracy:'정확도',streakLbl:'연속',homeBtn:'🏠 홈으로',replayBtn:'🔄 다시 하기',scoreLbl:'점',
+    navHome:'홈',navProg:'기록',levelJourney:'레벨 여정',
+    xpEarned:n=>`⭐ +${n} XP`,streakTxt:n=>`🔥 ${n}일 연속`,levelTxt:n=>`레벨 ${n}`,
+    progLbl:(done,needed)=>`레벨업까지 ${needed-done}번 더!`,
+    correct_fb:['✅ 정답!','⭐ 잘했어!','🌟 훌륭해!','🎉 완벽!','💪 맞았어!'],
+    wrong_fb:['💡 아쉬워!','🤔 거의 다 왔어!','😊 계속 해봐!'],
+    sessionComplete:'학습 완료!',
+    perfect:'완벽해요! 🌟',great:'잘했어요! ⭐',good:'좋아요! 👍',tryMore:'도전! 💪',
+    levelUpTitle:'레벨 업! 🎉',levelUpSub:(n,name)=>`레벨 ${n}: ${name}!`,
+    levelDownTitle:'💪 다시 연습해요!',levelDownSub:(n,name)=>`레벨 ${n}: ${name}으로 돌아가요`,
+    strandNames:{Number:'수와 연산',Algebra:'패턴/대수',Measurement:'측정',Space:'공간/도형',Statistics:'통계'},
+    levelNames:['1~5 더하기','1~5 빼기','1~10 더하기','1~10 빼기','10 만들기','10 넘기 더하기','1~20 더하기','1~20 빼기','혼합 +/−','나플란 종합'],
+    dayNames:['월','화','수','목','금','토','일'],
+    warmupTitle:'⚡ 워밍업',mainTitle:'📚 학습',naplanBadge:'📋 나플란',
+    hintDots:'점을 잘 세어봐요!',hintFrame:'채워진 (주황색) 칸을 세어봐요!',hintLine:'수직선에서 몇 칸 뛰었나요?',
+    hintBlank:'빈 칸에 들어갈 숫자는?',hintWord:'잘 읽고 풀어봐요!',hintAdd:'더해봐요!',
+    hintSub:'큰 수에서 작은 수를 빼요!',hintMake10:'합이 10이 되려면 몇이 필요해요?',hintSkip:'다음에 올 숫자는?',hintShape:'도형을 잘 봐요!',
   }
 };
-function t(key, ...args) {
-  const val = T[lang][key];
-  return typeof val === 'function' ? val(...args) : val;
-}
-function toggleLang() {
-  lang = lang === 'en' ? 'ko' : 'en';
-  DATA.lang = lang; saveData(DATA);
-  document.getElementById('lang-flag').textContent = lang === 'en' ? '🇰🇷' : '🇦🇺';
-  document.getElementById('lang-label').textContent = lang === 'en' ? '한국어' : 'English';
-  applyLang();
-  renderHome();
-}
-function applyLang() {
-  const ids = {
-    'txt-app-title':'appTitle','txt-app-sub':'appSub','txt-today-label':'todayLabel',
-    'txt-questions':'questions','txt-start-btn':'startBtn','txt-this-week':'thisWeek',
-    'txt-strands':'strands','txt-progress-title':'progressTitle',
-    'txt-best-streak':'bestStreak','txt-lessons-done':'lessonsDone',
-    'txt-overall-acc':'overallAcc','txt-correct':'correct','txt-accuracy':'accuracy',
-    'txt-streak':'streak','txt-home-btn':'homeBtn','txt-replay-btn':'replayBtn',
-    'txt-score-label':'scoreLabel','nav-home-lbl':'navHome',
-    'nav-progress-lbl':'navProgress','nav-schedule-lbl':'navSchedule',
-    'txt-cal-title':'calTitle',
-  };
-  Object.entries(ids).forEach(([id,key]) => {
-    const el = document.getElementById(id);
-    if(el) el.textContent = t(key);
-  });
+function t(k,...a){const v=TX[lang][k];return typeof v==='function'?v(...a):v;}
+function toggleLang(){lang=lang==='en'?'ko':'en';D.lang=lang;save(D);document.getElementById('lang-flag').textContent=lang==='en'?'🇰🇷':'🇦🇺';document.getElementById('lang-lbl').textContent=lang==='en'?'한국어':'English';renderHome();applyLang();}
+function applyLang(){
+  const m={'h-title':'appTitle','h-today-lbl':'todayLbl','h-warmup-lbl':'warmupLbl','h-main-lbl':'mainLbl','h-week-lbl':'weekLbl','h-strands-lbl':'strandsLbl','p-title':'progTitle','p-streak-lbl':'bestStreak','p-sessions-lbl':'sessionsDone','p-acc-lbl':'overallAcc','r-correct-lbl':'correct','r-acc-lbl':'accuracy','r-streak-lbl':'streakLbl','lj-title':'levelJourney','nav-home-lbl':'navHome','nav-prog-lbl':'navProg'};
+  Object.entries(m).forEach(([id,k])=>{const el=document.getElementById(id);if(el)el.textContent=t(k);});
+  document.getElementById('h-start-btn').textContent=t('startBtn');
+  document.getElementById('r-home-btn').textContent=t('homeBtn');
+  document.getElementById('r-replay-btn').textContent=t('replayBtn');
 }
 
-/* ════════════════════════════════════════════════
-   CURRICULUM — AC V9 Year 1, Term 2 focus
-   10 weeks × 5 days = 50 lessons
-════════════════════════════════════════════════ */
-const CURRICULUM = buildCurriculum();
-function buildCurriculum() {
-  // Term 2 Week 1–10, each week focuses on specific strands
-  const weeks = [
-    // Week 1: Number — counting to 120, place value
-    { en:"Numbers to 120", ko:"120까지의 수", strand:"Number", naplan:true, skills:["count120","placeValue","orderNumbers"] },
-    // Week 2: Number — addition to 20
-    { en:"Addition to 20", ko:"20까지 더하기", strand:"Number", naplan:true, skills:["add20","addVisual","addWord"] },
-    // Week 3: Number — subtraction to 20
-    { en:"Subtraction to 20", ko:"20까지 빼기", strand:"Number", naplan:true, skills:["sub20","subVisual","subWord"] },
-    // Week 4: Algebra — patterns and skip counting
-    { en:"Patterns & Skip Counting", ko:"패턴과 건너 세기", strand:"Algebra", naplan:true, skills:["skipCount2","skipCount5","patterns"] },
-    // Week 5: Measurement — length and comparison
-    { en:"Length & Measurement", ko:"길이와 측정", strand:"Measurement", naplan:false, skills:["compareLength","measureUnits","orderLength"] },
-    // Week 6: Space — 2D shapes
-    { en:"2D Shapes", ko:"2D 도형", strand:"Space", naplan:true, skills:["shapes2D","shapeFeatures","shapeSides"] },
-    // Week 7: Space — 3D objects + direction
-    { en:"3D Objects & Direction", ko:"3D 도형과 방향", strand:"Space", naplan:false, skills:["shapes3D","directions","position"] },
-    // Week 8: Number — equal groups / sharing
-    { en:"Equal Groups & Sharing", ko:"동등 분배", strand:"Number", naplan:true, skills:["equalGroups","sharing","halves"] },
-    // Week 9: Statistics — data collection
-    { en:"Data & Statistics", ko:"자료와 통계", strand:"Statistics", naplan:false, skills:["collectData","readGraph","compareData"] },
-    // Week 10: Mixed Review — NAPLAN style
-    { en:"NAPLAN Review Mix", ko:"나플란 종합 복습", strand:"Number", naplan:true, skills:["naplanMix"] },
+/* ── LEVELS ── */
+const LEVELS=[
+  {l:1,name:'1~5 Adding',nameKo:'1~5 더하기',ops:['add'],max:5},
+  {l:2,name:'1~5 Taking Away',nameKo:'1~5 빼기',ops:['sub'],max:5},
+  {l:3,name:'1~10 Adding',nameKo:'1~10 더하기',ops:['add'],max:10},
+  {l:4,name:'1~10 Taking Away',nameKo:'1~10 빼기',ops:['sub'],max:10},
+  {l:5,name:'Make 10',nameKo:'10 만들기',ops:['make10'],max:10},
+  {l:6,name:'Cross 10 Adding',nameKo:'10 넘기 더하기',ops:['cross10'],max:20},
+  {l:7,name:'1~20 Adding',nameKo:'1~20 더하기',ops:['add'],max:20},
+  {l:8,name:'1~20 Taking Away',nameKo:'1~20 빼기',ops:['sub'],max:20},
+  {l:9,name:'Mixed +/−',nameKo:'혼합 +/−',ops:['add','sub'],max:20},
+  {l:10,name:'NAPLAN Challenge',nameKo:'나플란 종합',ops:['add','sub','word','blank'],max:20},
+];
+const LV_UP=3, LV_DN=2; // consecutive sessions needed
+function getLV(n){return LEVELS[Math.min(n,10)-1];}
+function getLVName(n){const lv=getLV(n);return lang==='ko'?lv.nameKo:lv.name;}
+function checkLevelChange(warmupAcc){
+  const lvl=D.currentLevel;
+  if(!D.levelHistory[lvl])D.levelHistory[lvl]=[];
+  D.levelHistory[lvl].push(warmupAcc);
+  const hist=D.levelHistory[lvl];
+  const r3=hist.slice(-LV_UP), r2=hist.slice(-LV_DN);
+  if(lvl<10&&r3.length>=LV_UP&&r3.every(s=>s>=80)){D.currentLevel=lvl+1;if(!D.levelHistory[D.currentLevel])D.levelHistory[D.currentLevel]=[];save(D);return'up';}
+  if(lvl>1&&r2.length>=LV_DN&&r2.every(s=>s<50)){D.currentLevel=lvl-1;save(D);return'down';}
+  return'same';
+}
+function lvProgress(){const hist=D.levelHistory[D.currentLevel]||[];const recent=hist.slice(-LV_UP);const passing=recent.filter(s=>s>=80).length;return{passing,needed:LV_UP,pct:Math.round(passing/LV_UP*100)};}
+
+/* ── QUESTION GENERATORS ── */
+function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function shuffle(arr){return[...arr].sort(()=>Math.random()-0.5);}
+function safeWrongs(answer,count,min,max){
+  const ws=new Set();let tries=0;
+  while(ws.size<count&&tries<300){tries++;const d=rand(-5,5);if(d===0)continue;const w=answer+d;if(w<min||w>max+6||w===answer)continue;ws.add(w);}
+  let fb=answer+1;
+  while(ws.size<count){if(fb!==answer)ws.add(fb);fb++;if(fb>60)fb=0;}
+  return[...ws].slice(0,count);
+}
+
+function qSimpleAdd(lv){
+  let a,b,ans,t=0;
+  do{a=rand(1,Math.max(1,lv.max-1));b=rand(1,Math.max(1,lv.max-a));ans=a+b;t++;}while((ans>lv.max||ans<2)&&t<200);
+  if(t>=200){a=1;b=1;ans=2;}
+  return{type:'simpleAdd',ans,choices:shuffle([ans,...safeWrongs(ans,3,0,lv.max+4)]),textEn:`${a} + ${b} = ?`,textKo:`${a} + ${b} = ?`,hintKey:'hintAdd',strand:'Number',naplan:false,visual:null};
+}
+function qSimpleSub(lv){
+  let a,b,ans,t=0;
+  do{a=rand(2,lv.max);b=rand(1,a-1);ans=a-b;t++;}while((ans<0||ans>lv.max)&&t<200);
+  if(t>=200){a=3;b=1;ans=2;}
+  return{type:'simpleSub',ans,choices:shuffle([ans,...safeWrongs(ans,3,0,lv.max)]),textEn:`${a} − ${b} = ?`,textKo:`${a} − ${b} = ?`,hintKey:'hintSub',strand:'Number',naplan:false,visual:null};
+}
+function qMake10(){
+  const a=rand(1,9),ans=10-a;
+  return{type:'make10',ans,choices:shuffle([ans,...safeWrongs(ans,3,0,12)]),textEn:`${a} + ? = 10`,textKo:`${a} + ? = 10`,hintKey:'hintMake10',strand:'Number',naplan:true,visual:null};
+}
+function qCross10(){
+  let a,b,ans,t=0;
+  do{a=rand(5,9);b=rand(2,9);ans=a+b;t++;}while((ans<=10||ans>20)&&t<200);
+  if(t>=200){a=7;b=4;ans=11;}
+  return{type:'cross10',ans,choices:shuffle([ans,...safeWrongs(ans,3,10,20)]),textEn:`${a} + ${b} = ?`,textKo:`${a} + ${b} = ?`,hintKey:'hintAdd',strand:'Number',naplan:true,visual:null};
+}
+function qBlank(lv){
+  let a,b,t=0;
+  do{a=rand(1,lv.max-2);b=rand(1,lv.max-a);t++;}while((a+b>lv.max||b<1)&&t<200);
+  if(t>=200){a=3;b=2;}
+  const total=a+b,ans=b;
+  return{type:'blank',ans,choices:shuffle([ans,...safeWrongs(ans,3,0,lv.max)]),textEn:`${a} + __ = ${total}`,textKo:`${a} + __ = ${total}`,hintKey:'hintBlank',strand:'Number',naplan:true,visual:null};
+}
+const ITEMS_EN=['apples','stars','cats','books','flowers','frogs','birds','fish'];
+const ITEMS_KO=['사과','별','고양이','책','꽃','개구리','새','물고기'];
+function qWord(lv){
+  const isAdd=rand(0,1)===1,idx=rand(0,ITEMS_EN.length-1);
+  const ien=ITEMS_EN[idx],iko=ITEMS_KO[idx];
+  let a,b,ans,t=0;
+  if(isAdd){
+    do{a=rand(1,lv.max-1);b=rand(1,lv.max-a);ans=a+b;t++;}while((ans>lv.max||ans<2)&&t<200);
+    if(t>=200){a=2;b=3;ans=5;}
+    return{type:'word',ans,choices:shuffle([ans,...safeWrongs(ans,3,0,lv.max+2)]),textEn:`There are ${a} ${ien}.\n${b} more arrive.\nHow many now?`,textKo:`${iko}가 ${a}개 있어요.\n${b}개가 더 왔어요.\n모두 몇 개?`,hintKey:'hintWord',strand:'Number',naplan:true,visual:null};
+  } else {
+    do{a=rand(2,lv.max);b=rand(1,a-1);ans=a-b;t++;}while(ans<0&&t<200);
+    if(t>=200){a=5;b=2;ans=3;}
+    return{type:'word',ans,choices:shuffle([ans,...safeWrongs(ans,3,0,lv.max)]),textEn:`There are ${a} ${ien}.\n${b} go away.\nHow many left?`,textKo:`${iko}가 ${a}개 있어요.\n${b}개가 없어졌어요.\n몇 개 남았나요?`,hintKey:'hintWord',strand:'Number',naplan:true,visual:null};
+  }
+}
+function qDot(lv){
+  const mx=Math.min(lv.max,10),n=rand(1,mx);
+  return{type:'dot',ans:n,choices:shuffle([n,...safeWrongs(n,3,1,mx+2)]),textEn:'How many dots?',textKo:'점이 몇 개?',hintKey:'hintDots',strand:'Number',naplan:false,visual:{kind:'dots',count:n}};
+}
+function qTenFrame(lv){
+  const mx=Math.min(lv.max,10),n=rand(1,mx);
+  return{type:'tenframe',ans:n,choices:shuffle([n,...safeWrongs(n,3,1,10)]),textEn:'How many filled boxes?',textKo:'채워진 칸은 몇 개?',hintKey:'hintFrame',strand:'Number',naplan:false,visual:{kind:'tenframe',count:n}};
+}
+function qNumberLine(lv){
+  const start=rand(0,Math.max(0,lv.max-4)),jump=rand(1,Math.min(4,lv.max-start)),ans=start+jump;
+  return{type:'nline',ans,choices:shuffle([ans,...safeWrongs(ans,3,0,lv.max+3)]),textEn:`Start at ${start}, jump ${jump}.\nWhere do you land?`,textKo:`${start}에서 ${jump}칸 가면\n어디에 있나요?`,hintKey:'hintLine',strand:'Number',naplan:false,visual:{kind:'nline',start,jump,ans}};
+}
+
+// Curriculum questions
+const SH2D=[{name:'circle',ko:'원',emoji:'⭕'},{name:'triangle',ko:'삼각형',emoji:'🔺'},{name:'square',ko:'정사각형',emoji:'🟥'},{name:'rectangle',ko:'직사각형',emoji:'▬'},{name:'hexagon',ko:'육각형',emoji:'⬡'}];
+function qShape(){
+  const s=SH2D[rand(0,SH2D.length-1)];
+  const others=shuffle(SH2D.filter(x=>x.name!==s.name)).slice(0,3);
+  return{type:'shape',ans:s.name,answerEn:s.name,answerKo:s.ko,choicesEn:shuffle([s.name,...others.map(o=>o.name)]),choicesKo:shuffle([s.ko,...others.map(o=>o.ko)]),choices:shuffle([s.name,...others.map(o=>o.name)]),textEn:'What shape is this?',textKo:'이 도형의 이름은?',hintKey:'hintShape',strand:'Space',naplan:true,visual:{kind:'emoji',emoji:s.emoji}};
+}
+function qSkipCount(){
+  const step=rand(0,1)===0?2:5,start=rand(0,4)*step,steps=rand(3,5);
+  const seq=[];for(let i=0;i<steps;i++)seq.push(start+i*step);
+  const ans=start+steps*step;
+  const wr=[ans+step,Math.max(0,ans-step),ans+step*2].filter(w=>w!==ans);
+  while(wr.length<3)wr.push(ans+wr.length+1);
+  return{type:'skip',ans,choices:shuffle([ans,...wr.slice(0,3)]),textEn:`Count by ${step}s:\n${seq.join(', ')}, __?`,textKo:`${step}씩 세기:\n${seq.join(', ')}, __?`,hintKey:'hintSkip',strand:'Algebra',naplan:true,visual:null};
+}
+function qPattern(){
+  const pats=[{seq:['🔴','🔵','🔴','🔵','🔴'],ans:'🔵',wr:['🔴','🟢','🟡']},{seq:['⭐','⭐','🌙','⭐','⭐'],ans:'🌙',wr:['⭐','☀️','💫']},{seq:['🐱','🐶','🐱','🐶','🐱'],ans:'🐶',wr:['🐱','🐰','🐸']},{seq:['🔺','🔷','🔺','🔷','🔺'],ans:'🔷',wr:['🔺','⭕','🔶']},{seq:['🌸','🌼','🌸','🌼','🌸'],ans:'🌼',wr:['🌸','🌺','🌻']}];
+  const p=pats[rand(0,pats.length-1)];
+  return{type:'pattern',ans:p.ans,choices:shuffle([p.ans,...p.wr]),textEn:`What comes next?\n${p.seq.join(' ')}  ?`,textKo:`다음은 무엇?\n${p.seq.join(' ')}  ?`,hintKey:'hintSkip',strand:'Algebra',naplan:false,visual:null};
+}
+function qMeasure(){
+  const qs=[
+    {en:'A pencil is 5 cubes long.\nA ruler is 3 more.\nHow long is the ruler?',ko:'연필은 큐브 5개 길이예요.\n자는 3개 더 길어요.\n자의 길이는?',ans:8,wr:[5,6,7]},
+    {en:'A book is 10 cubes long.\nA pen is 4 less.\nHow long is the pen?',ko:'책은 큐브 10개 길이예요.\n펜은 4개 짧아요.\n펜의 길이는?',ans:6,wr:[4,5,7]},
+    {en:'A worm is 3 cubes long.\nA snake is 5 more.\nHow long is the snake?',ko:'지렁이는 큐브 3개 길이예요.\n뱀은 5개 더 길어요.\n뱀의 길이는?',ans:8,wr:[5,6,7]},
   ];
-  const lessons = [];
-  weeks.forEach((wk,wi) => {
-    for(let d=0;d<5;d++) {
-      lessons.push({
-        id: `T2W${wi+1}D${d+1}`,
-        term:2, week:wi+1, day:d+1,
-        titleEn: `${wk.en} — Day ${d+1}`,
-        titleKo: `${wk.ko} — ${d+1}일차`,
-        strand: wk.strand,
-        naplan: wk.naplan,
-        skills: wk.skills,
-        qCount: 8,
-      });
-    }
-  });
-  return lessons;
+  const q=qs[rand(0,qs.length-1)];
+  return{type:'measure',ans:q.ans,choices:shuffle([q.ans,...q.wr]),textEn:q.en,textKo:q.ko,hintKey:'hintWord',strand:'Measurement',naplan:false,visual:null};
+}
+function qStats(){
+  let a,b,c;
+  do{a=rand(1,8);b=rand(1,8);c=rand(1,8);}while(a===b||b===c||a===c);
+  const askMost=rand(0,1)===1;
+  const target=askMost?Math.max(a,b,c):Math.min(a,b,c);
+  const aEn=target===a?'🍎 Apples':target===b?'🍌 Bananas':'🍇 Grapes';
+  const aKo=target===a?'🍎 사과':target===b?'🍌 바나나':'🍇 포도';
+  const wEn=['🍎 Apples','🍌 Bananas','🍇 Grapes'].filter(x=>x!==aEn);
+  const wKo=['🍎 사과','🍌 바나나','🍇 포도'].filter(x=>x!==aKo);
+  return{type:'stats',ans:aEn,answerEn:aEn,answerKo:aKo,choicesEn:shuffle([aEn,...wEn]),choicesKo:shuffle([aKo,...wKo]),choices:shuffle([aEn,...wEn]),textEn:`Apples:${a} 🍎  Bananas:${b} 🍌  Grapes:${c} 🍇\nWhich has the ${askMost?'most':'fewest'}?`,textKo:`사과:${a}개 🍎  바나나:${b}개 🍌  포도:${c}개 🍇\n${askMost?'가장 많은':'가장 적은'} 것은?`,hintKey:'hintWord',strand:'Statistics',naplan:true,visual:null};
 }
 
-/* ════════════════════════════════════════════════
-   QUESTION GENERATORS
-════════════════════════════════════════════════ */
-function rand(a,b) { return Math.floor(Math.random()*(b-a+1))+a; }
-function shuffle(a) { return [...a].sort(()=>Math.random()-0.5); }
-const EMOJIS_POOL = ['🍎','🍓','⭐','🐱','🐶','🦋','🌸','🍊','🍋','🐰','🐸','🌟','💎','🎈'];
-function randEmoji() { return EMOJIS_POOL[rand(0,EMOJIS_POOL.length-1)]; }
-
-function generateQuestion(skills) {
-  const skill = skills[rand(0, skills.length-1)];
-  return QUESTION_GENERATORS[skill] ? QUESTION_GENERATORS[skill]() : QUESTION_GENERATORS.add20();
-}
-
-const QUESTION_GENERATORS = {
-  count120: () => {
-    const n = rand(21,120);
-    const wrongs = new Set();
-    while(wrongs.size<3){const w=n+rand(-5,5); if(w!==n&&w>0&&w<=125) wrongs.add(w);}
-    const emoji = randEmoji();
-    const show = Math.min(n, 20); // show up to 20 objects
-    return {
-      strandEn:'Number', strandKo:'수와 연산',
-      naplan: n > 50,
-      visualEmoji: emoji, visualCount: show,
-      textEn: n <= 20 ? `How many ${emoji}?` : `What number comes after ${n-1}?`,
-      textKo: n <= 20 ? `${emoji}가 몇 개일까요?` : `${n-1} 다음 수는?`,
-      hintEn: 'Count carefully!', hintKo: '잘 세어봐요!',
-      answer: n, choices: shuffle([n,...wrongs]),
-    };
-  },
-  placeValue: () => {
-    const tens = rand(1,9), ones = rand(0,9);
-    const n = tens*10+ones;
-    const wrongs = new Set();
-    while(wrongs.size<3){const w=n+rand(-10,10); if(w!==n&&w>0&&w<=99) wrongs.add(w);}
-    return {
-      strandEn:'Number', strandKo:'수와 연산', naplan:true,
-      visualEmoji:'📦', visualCount:0,
-      textEn:`${tens} tens and ${ones} ones = ?`,
-      textKo:`10이 ${tens}개, 1이 ${ones}개 = ?`,
-      hintEn:'Think about tens and ones', hintKo:'십의 자리와 일의 자리를 생각해봐요',
-      answer:n, choices:shuffle([n,...wrongs]),
-    };
-  },
-  orderNumbers: () => {
-    const a=rand(1,50),b=rand(1,50),c=rand(1,50);
-    const sorted=[a,b,c].sort((x,y)=>x-y);
-    const answer=sorted[rand(0,1)?2:0]; // biggest or smallest
-    const biggest=answer===sorted[2];
-    const wrongs=shuffle([a,b,c].filter(x=>x!==answer)).slice(0,2);
-    wrongs.push(rand(1,50));
-    return {
-      strandEn:'Number', strandKo:'수와 연산', naplan:true,
-      visualEmoji:'🔢', visualCount:0,
-      textEn:`Which is ${biggest?'biggest':'smallest'}?\n${a}  ${b}  ${c}`,
-      textKo:`${biggest?'가장 큰':'가장 작은'} 수는?\n${a}  ${b}  ${c}`,
-      hintEn:'Compare the numbers', hintKo:'숫자들을 비교해봐요',
-      answer, choices:shuffle([answer,...wrongs.slice(0,3)]),
-    };
-  },
-  add20: () => {
-    const a=rand(1,10),b=rand(1,10-Math.min(a,9));
-    const ans=a+b;
-    const emoji=randEmoji();
-    const wrongs=new Set();
-    while(wrongs.size<3){const w=ans+rand(-3,3); if(w!==ans&&w>=0&&w<=20) wrongs.add(w);}
-    return {
-      strandEn:'Number', strandKo:'수와 연산', naplan:true,
-      visualEmoji:emoji, visualCount:a,
-      textEn:`${a} + ${b} = ?`, textKo:`${a} + ${b} = ?`,
-      hintEn:`Count all the ${emoji}`, hintKo:`${emoji}를 모두 세어봐요`,
-      answer:ans, choices:shuffle([ans,...wrongs]),
-    };
-  },
-  addVisual: () => {
-    const a=rand(1,9),b=rand(1,9);
-    const ans=a+b;
-    const e1=randEmoji(),e2=randEmoji();
-    const wrongs=new Set();
-    while(wrongs.size<3){const w=ans+rand(-4,4); if(w!==ans&&w>0) wrongs.add(w);}
-    return {
-      strandEn:'Number', strandKo:'수와 연산', naplan:false,
-      visualEmoji:e1, visualCount:a, visualEmoji2:e2, visualCount2:b,
-      textEn:`${a} + ${b} = ?`, textKo:`${a} + ${b} = ?`,
-      hintEn:'Add the groups together', hintKo:'두 그룹을 합쳐봐요',
-      answer:ans, choices:shuffle([ans,...wrongs]),
-    };
-  },
-  addWord: () => {
-    const a=rand(2,10),b=rand(1,10-Math.min(a,9));
-    const ans=a+b;
-    const items=['apples','stars','cats','flowers','books'];
-    const item=items[rand(0,items.length-1)];
-    const itemKo=['사과','별','고양이','꽃','책'];
-    const iKo=itemKo[items.indexOf(item)];
-    const wrongs=new Set();
-    while(wrongs.size<3){const w=ans+rand(-3,3); if(w!==ans&&w>0) wrongs.add(w);}
-    return {
-      strandEn:'Number', strandKo:'수와 연산', naplan:true,
-      visualEmoji:'🧩', visualCount:0,
-      textEn:`Mia has ${a} ${item}. She gets ${b} more. How many now?`,
-      textKo:`미아는 ${item==='apples'?'사과':iKo}가 ${a}개 있어요. ${b}개를 더 받았어요. 모두 몇 개?`,
-      hintEn:'Add them together!', hintKo:'더해봐요!',
-      answer:ans, choices:shuffle([ans,...wrongs]),
-    };
-  },
-  sub20: () => {
-    const a=rand(5,20),b=rand(1,a);
-    const ans=a-b;
-    const emoji=randEmoji();
-    const wrongs=new Set();
-    while(wrongs.size<3){const w=ans+rand(-3,3); if(w!==ans&&w>=0&&w<=20) wrongs.add(w);}
-    return {
-      strandEn:'Number', strandKo:'수와 연산', naplan:true,
-      visualEmoji:emoji, visualCount:a,
-      textEn:`${a} − ${b} = ?`, textKo:`${a} − ${b} = ?`,
-      hintEn:`Take away ${b}`, hintKo:`${b}개를 빼봐요`,
-      answer:ans, choices:shuffle([ans,...wrongs]),
-    };
-  },
-  subVisual: () => {
-    const a=rand(5,15),b=rand(1,a);
-    const ans=a-b;
-    const emoji=randEmoji();
-    const wrongs=new Set();
-    while(wrongs.size<3){const w=ans+rand(-3,3); if(w!==ans&&w>=0) wrongs.add(w);}
-    return {
-      strandEn:'Number', strandKo:'수와 연산', naplan:false,
-      visualEmoji:emoji, visualCount:a,
-      textEn:`${a} take away ${b} = ?`, textKo:`${a}에서 ${b}를 빼면?`,
-      hintEn:`Cross out ${b} items`, hintKo:`${b}개를 지워봐요`,
-      answer:ans, choices:shuffle([ans,...wrongs]),
-    };
-  },
-  subWord: () => {
-    const a=rand(5,15),b=rand(1,a);
-    const ans=a-b;
-    const wrongs=new Set();
-    while(wrongs.size<3){const w=ans+rand(-3,3); if(w!==ans&&w>=0) wrongs.add(w);}
-    return {
-      strandEn:'Number', strandKo:'수와 연산', naplan:true,
-      visualEmoji:'🎈', visualCount:0,
-      textEn:`There are ${a} balloons. ${b} fly away. How many left?`,
-      textKo:`풍선이 ${a}개 있어요. ${b}개가 날아갔어요. 몇 개 남았나요?`,
-      hintEn:'Subtract!', hintKo:'빼기를 해봐요!',
-      answer:ans, choices:shuffle([ans,...wrongs]),
-    };
-  },
-  skipCount2: () => {
-    const start=rand(0,5)*2;
-    const steps=rand(3,6);
-    const seq=[]; for(let i=0;i<steps;i++) seq.push(start+i*2);
-    const answer=start+steps*2;
-    const wrongs=[answer+2,answer-2,answer+1].filter(w=>w!==answer&&w>=0);
-    return {
-      strandEn:'Algebra', strandKo:'대수/패턴', naplan:true,
-      visualEmoji:'📊', visualCount:0,
-      textEn:`Count by 2s:\n${seq.join(', ')}, __?`,
-      textKo:`2씩 세기:\n${seq.join(', ')}, __?`,
-      hintEn:'Add 2 each time', hintKo:'매번 2씩 더해요',
-      answer, choices:shuffle([answer,...wrongs.slice(0,3)]),
-    };
-  },
-  skipCount5: () => {
-    const start=rand(0,3)*5;
-    const steps=rand(3,5);
-    const seq=[]; for(let i=0;i<steps;i++) seq.push(start+i*5);
-    const answer=start+steps*5;
-    const wrongs=[answer+5,answer-5,answer+10].filter(w=>w!==answer&&w>=0);
-    return {
-      strandEn:'Algebra', strandKo:'대수/패턴', naplan:true,
-      visualEmoji:'✋', visualCount:0,
-      textEn:`Count by 5s:\n${seq.join(', ')}, __?`,
-      textKo:`5씩 세기:\n${seq.join(', ')}, __?`,
-      hintEn:'Add 5 each time', hintKo:'매번 5씩 더해요',
-      answer, choices:shuffle([answer,...wrongs.slice(0,3)]),
-    };
-  },
-  patterns: () => {
-    const patterns=[
-      {seq:['🔴','🔵','🔴','🔵','🔴'],ans:'🔵',wrong:['🔴','🟢','🟡']},
-      {seq:['⭐','⭐','🌙','⭐','⭐'],ans:'🌙',wrong:['⭐','☀️','💫']},
-      {seq:['🐱','🐶','🐱','🐶','🐱'],ans:'🐶',wrong:['🐱','🐰','🐸']},
-      {seq:['🔺','🔷','🔺','🔷','🔺'],ans:'🔷',wrong:['🔺','⭕','🔶']},
-    ];
-    const p=patterns[rand(0,patterns.length-1)];
-    return {
-      strandEn:'Algebra', strandKo:'대수/패턴', naplan:false,
-      visualEmoji:'🎨', visualCount:0,
-      textEn:`What comes next?\n${p.seq.join('  ')}  __?`,
-      textKo:`다음은 무엇일까요?\n${p.seq.join('  ')}  __?`,
-      hintEn:'Find the repeating pattern', hintKo:'반복되는 패턴을 찾아봐요',
-      answer:p.ans, choices:shuffle([p.ans,...p.wrong]),
-    };
-  },
-  compareLength: () => {
-    const objects=[
-      {a:'pencil',b:'ruler',longer:'ruler',en:'pencil / ruler',ko:'연필 / 자'},
-      {a:'ant',b:'worm',longer:'worm',en:'ant / worm',ko:'개미 / 지렁이'},
-      {a:'finger',b:'arm',longer:'arm',en:'finger / arm',ko:'손가락 / 팔'},
-      {a:'book',b:'eraser',longer:'book',en:'book / eraser',ko:'책 / 지우개'},
-    ];
-    const o=objects[rand(0,objects.length-1)];
-    const isLonger=rand(0,1)===1;
-    const answer=isLonger?o.longer:(o.longer===o.a?o.b:o.a);
-    const wrong=answer===o.a?o.b:o.a;
-    return {
-      strandEn:'Measurement', strandKo:'측정', naplan:false,
-      visualEmoji:'📏', visualCount:0,
-      textEn:`Which is ${isLonger?'longer':'shorter'}?\n${o.en}`,
-      textKo:`어느 것이 ${isLonger?'더 길까요?':'더 짧을까요?'}\n${o.ko}`,
-      hintEn:'Compare them!', hintKo:'비교해봐요!',
-      answer, choices:shuffle([answer,wrong,o.a+'+'+o.b,'same']),
-    };
-  },
-  measureUnits: () => {
-    const n=rand(3,12);
-    const unit=rand(0,1)?'paper clips':'cubes';
-    const unitKo=unit==='paper clips'?'클립':'큐브';
-    const adj=rand(0,1);
-    const actualLen=n+(adj===0?-1:1);
-    const wrongs=[n-2,n+2,n-1].filter(w=>w>0&&w!==n);
-    return {
-      strandEn:'Measurement', strandKo:'측정', naplan:false,
-      visualEmoji:'📐', visualCount:0,
-      textEn:`A pencil is ${n} ${unit} long. A book is 1 more. How long is the book?`,
-      textKo:`연필은 ${unit===''?'':unitKo} ${n}개 길이예요. 책은 1개 더 길어요. 책의 길이는?`,
-      hintEn:'Add 1 more unit', hintKo:'1을 더해봐요',
-      answer:n+1, choices:shuffle([n+1,...wrongs.slice(0,3)]),
-    };
-  },
-  orderLength: () => {
-    const a=rand(2,8),b=rand(2,8),c=rand(2,8);
-    const sorted=[a,b,c].sort((x,y)=>x-y);
-    const answer=sorted[2];
-    const wrongs=shuffle([a,b,c].filter(x=>x!==answer));
-    return {
-      strandEn:'Measurement', strandKo:'측정', naplan:false,
-      visualEmoji:'📏', visualCount:0,
-      textEn:`Pencils are ${a}, ${b}, and ${c} cubes long.\nWhich is longest?`,
-      textKo:`연필들이 ${a}, ${b}, ${c}큐브 길이예요.\n가장 긴 것은?`,
-      hintEn:'Find the biggest number', hintKo:'가장 큰 수를 찾아요',
-      answer:String(answer), choices:shuffle([String(answer),String(wrongs[0]),String(wrongs[1]),String(rand(2,10))]),
-    };
-  },
-  shapes2D: () => {
-    const shapes=[
-      {name:'circle',ko:'원',emoji:'⭕',sides:0,corners:0},
-      {name:'triangle',ko:'삼각형',emoji:'🔺',sides:3,corners:3},
-      {name:'square',ko:'정사각형',emoji:'🟥',sides:4,corners:4},
-      {name:'rectangle',ko:'직사각형',emoji:'▬',sides:4,corners:4},
-      {name:'hexagon',ko:'육각형',emoji:'⬡',sides:6,corners:6},
-    ];
-    const s=shapes[rand(0,shapes.length-1)];
-    const others=shuffle(shapes.filter(x=>x.name!==s.name)).slice(0,3);
-    return {
-      strandEn:'Space', strandKo:'공간/도형', naplan:true,
-      visualEmoji:s.emoji, visualCount:0,
-      textEn:`What shape is this?`, textKo:`이 도형의 이름은?`,
-      hintEn:`Count the sides`, hintKo:`변의 수를 세어봐요`,
-      answer:s.name, choices:shuffle([s.name,...others.map(o=>o.name)]),
-      answerKo:s.ko, choicesKo:shuffle([s.ko,...others.map(o=>o.ko)]),
-    };
-  },
-  shapeFeatures: () => {
-    const qs=[
-      {textEn:'How many sides does a triangle have?',textKo:'삼각형의 변은 몇 개?',answer:3,emoji:'🔺'},
-      {textEn:'How many corners does a square have?',textKo:'정사각형의 꼭짓점은 몇 개?',answer:4,emoji:'🟥'},
-      {textEn:'How many sides does a hexagon have?',textKo:'육각형의 변은 몇 개?',answer:6,emoji:'⬡'},
-      {textEn:'How many sides does a circle have?',textKo:'원의 변은 몇 개?',answer:0,emoji:'⭕'},
-    ];
-    const q=qs[rand(0,qs.length-1)];
-    const wrongs=[q.answer-1,q.answer+1,q.answer+2].filter(w=>w>=0&&w!==q.answer);
-    return {
-      strandEn:'Space', strandKo:'공간/도형', naplan:false,
-      visualEmoji:q.emoji, visualCount:0,
-      textEn:q.textEn, textKo:q.textKo,
-      hintEn:'Count carefully', hintKo:'잘 세어봐요',
-      answer:q.answer, choices:shuffle([q.answer,...wrongs.slice(0,3)]),
-    };
-  },
-  shapeSides: () => {
-    const ns=[
-      {sides:3,name:'triangle',ko:'삼각형',emoji:'🔺'},
-      {sides:4,name:'square',ko:'사각형',emoji:'🟥'},
-      {sides:6,name:'hexagon',ko:'육각형',emoji:'⬡'},
-    ];
-    const n=ns[rand(0,ns.length-1)];
-    const others=shuffle(ns.filter(x=>x.sides!==n.sides)).slice(0,2);
-    return {
-      strandEn:'Space', strandKo:'공간/도형', naplan:true,
-      visualEmoji:'❓', visualCount:0,
-      textEn:`Which shape has ${n.sides} sides?`,
-      textKo:`변이 ${n.sides}개인 도형은?`,
-      hintEn:'Think about each shape', hintKo:'각 도형을 생각해봐요',
-      answer:n.name, choices:shuffle([n.name,...others.map(o=>o.name),'circle']),
-      answerKo:n.ko, choicesKo:shuffle([n.ko,...others.map(o=>o.ko),'원']),
-    };
-  },
-  shapes3D: () => {
-    const shapes=[
-      {name:'cube',ko:'정육면체',emoji:'🎲',faces:6},
-      {name:'sphere',ko:'구',emoji:'🌕',faces:0},
-      {name:'cylinder',ko:'원기둥',emoji:'🥫',faces:2},
-      {name:'cone',ko:'원뿔',emoji:'🍦',faces:1},
-    ];
-    const s=shapes[rand(0,shapes.length-1)];
-    const others=shuffle(shapes.filter(x=>x.name!==s.name)).slice(0,3);
-    return {
-      strandEn:'Space', strandKo:'공간/도형', naplan:false,
-      visualEmoji:s.emoji, visualCount:0,
-      textEn:`What 3D shape is this?`, textKo:`이 입체 도형은?`,
-      hintEn:'Think about its faces and edges', hintKo:'면과 모서리를 생각해봐요',
-      answer:s.name, choices:shuffle([s.name,...others.map(o=>o.name)]),
-      answerKo:s.ko, choicesKo:shuffle([s.ko,...others.map(o=>o.ko)]),
-    };
-  },
-  directions: () => {
-    const qs=[
-      {textEn:'The cat is ___ the box.',textKo:'고양이는 상자 ___에 있어요.',emoji:'📦🐱',answer:'on top of',answerKo:'위에',wrong:['under','next to','inside'],wrongKo:['아래에','옆에','안에']},
-      {textEn:'The ball is ___ the table.',textKo:'공은 탁자 ___에 있어요.',emoji:'🏓⚽',answer:'under',answerKo:'아래에',wrong:['on top of','behind','inside'],wrongKo:['위에','뒤에','안에']},
-    ];
-    const q=qs[rand(0,qs.length-1)];
-    return {
-      strandEn:'Space', strandKo:'공간/도형', naplan:false,
-      visualEmoji:q.emoji.split('')[0], visualCount:0,
-      textEn:q.textEn, textKo:q.textKo,
-      hintEn:'Where is the object?', hintKo:'물건이 어디 있나요?',
-      answer:lang==='ko'?q.answerKo:q.answer,
-      choices:lang==='ko'?shuffle([q.answerKo,...q.wrongKo]):shuffle([q.answer,...q.wrong]),
-    };
-  },
-  position: () => {
-    const qs=[
-      {textEn:'What is to the LEFT of the star?  🍎⭐🌙',textKo:'별의 왼쪽에 있는 것은?  🍎⭐🌙',answer:'🍎',wrong:['🌙','⭐','🔵']},
-      {textEn:'What is to the RIGHT of the star?  🍎⭐🌙',textKo:'별의 오른쪽에 있는 것은?  🍎⭐🌙',answer:'🌙',wrong:['🍎','⭐','🔵']},
-    ];
-    const q=qs[rand(0,qs.length-1)];
-    return {
-      strandEn:'Space', strandKo:'공간/도형', naplan:false,
-      visualEmoji:'⭐', visualCount:0,
-      textEn:q.textEn, textKo:q.textKo,
-      hintEn:'Look carefully left or right', hintKo:'왼쪽 오른쪽을 잘 봐요',
-      answer:q.answer, choices:shuffle([q.answer,...q.wrong]),
-    };
-  },
-  equalGroups: () => {
-    const groups=rand(2,5), each=rand(1,5);
-    const total=groups*each;
-    const wrongs=new Set();
-    while(wrongs.size<3){const w=total+rand(-4,4); if(w!==total&&w>0) wrongs.add(w);}
-    const emoji=randEmoji();
-    return {
-      strandEn:'Number', strandKo:'수와 연산', naplan:true,
-      visualEmoji:emoji, visualCount:0,
-      textEn:`${groups} groups of ${each} = ?`, textKo:`${each}개씩 ${groups}묶음 = ?`,
-      hintEn:`Count all the groups`, hintKo:`묶음을 모두 세어봐요`,
-      answer:total, choices:shuffle([total,...wrongs]),
-    };
-  },
-  sharing: () => {
-    const total=rand(4,20), groups=rand(2,4);
-    if(total%groups!==0) return QUESTION_GENERATORS.sharing();
-    const each=total/groups;
-    const wrongs=new Set();
-    while(wrongs.size<3){const w=each+rand(-3,3); if(w!==each&&w>0) wrongs.add(w);}
-    return {
-      strandEn:'Number', strandKo:'수와 연산', naplan:true,
-      visualEmoji:'🎁', visualCount:0,
-      textEn:`Share ${total} equally between ${groups}. Each gets?`,
-      textKo:`${total}개를 ${groups}명이 똑같이 나누면 각각 몇 개?`,
-      hintEn:'Divide equally', hintKo:'똑같이 나눠봐요',
-      answer:each, choices:shuffle([each,...wrongs]),
-    };
-  },
-  halves: () => {
-    const n=rand(2,20)*2/2*2; // even
-    const even=rand(1,10)*2;
-    const half=even/2;
-    const wrongs=[half-1,half+1,half+2].filter(w=>w>0&&w!==half);
-    return {
-      strandEn:'Number', strandKo:'수와 연산', naplan:false,
-      visualEmoji:'🍕', visualCount:0,
-      textEn:`Half of ${even} = ?`, textKo:`${even}의 절반은?`,
-      hintEn:'Split into 2 equal groups', hintKo:'2개로 똑같이 나눠요',
-      answer:half, choices:shuffle([half,...wrongs.slice(0,3)]),
-    };
-  },
-  collectData: () => {
-    const animals=['cats','dogs','birds','fish'];
-    const counts=animals.map(()=>rand(1,8));
-    const maxIdx=counts.indexOf(Math.max(...counts));
-    const qs=[
-      {en:`Favourite pets: cats=${counts[0]}, dogs=${counts[1]}, birds=${counts[2]}\nHow many cats?`, ko:`좋아하는 동물: 고양이=${counts[0]}, 개=${counts[1]}, 새=${counts[2]}\n고양이는 몇 마리?`, answer:counts[0]},
-      {en:`Favourite pets: cats=${counts[0]}, dogs=${counts[1]}, birds=${counts[2]}\nTotal cats + dogs?`, ko:`좋아하는 동물: 고양이=${counts[0]}, 개=${counts[1]}, 새=${counts[2]}\n고양이와 개 합치면?`, answer:counts[0]+counts[1]},
-    ];
-    const q=qs[rand(0,qs.length-1)];
-    const wrongs=new Set();
-    while(wrongs.size<3){const w=q.answer+rand(-4,4); if(w!==q.answer&&w>0) wrongs.add(w);}
-    return {
-      strandEn:'Statistics', strandKo:'통계', naplan:true,
-      visualEmoji:'📊', visualCount:0,
-      textEn:q.en, textKo:q.ko,
-      hintEn:'Read the data carefully', hintKo:'자료를 잘 읽어봐요',
-      answer:q.answer, choices:shuffle([q.answer,...wrongs]),
-    };
-  },
-  readGraph: () => {
-    const a=rand(2,7),b=rand(2,7),c=rand(2,7);
-    const biggest=Math.max(a,b,c);
-    const qs=[
-      {en:`Apples: ${a} 🍎  Bananas: ${b} 🍌  Grapes: ${c} 🍇\nWhich has the most?`,
-       ko:`사과: ${a}개 🍎  바나나: ${b}개 🍌  포도: ${c}개 🍇\n가장 많은 것은?`,
-       answer:a>=b&&a>=c?'🍎 Apples':b>=a&&b>=c?'🍌 Bananas':'🍇 Grapes',
-       answerKo:a>=b&&a>=c?'🍎 사과':b>=a&&b>=c?'🍌 바나나':'🍇 포도',
-       wrong:['🍎 Apples','🍌 Bananas','🍇 Grapes'].filter(x=>x!==(a>=b&&a>=c?'🍎 Apples':b>=a&&b>=c?'🍌 Bananas':'🍇 Grapes')),
-       wrongKo:['🍎 사과','🍌 바나나','🍇 포도'].filter(x=>x!==(a>=b&&a>=c?'🍎 사과':b>=a&&b>=c?'🍌 바나나':'🍇 포도')),
-      },
-    ];
-    const q=qs[0];
-    const ans=lang==='ko'?q.answerKo:q.answer;
-    const choices=lang==='ko'?shuffle([q.answerKo,...q.wrongKo]):shuffle([q.answer,...q.wrong]);
-    return {
-      strandEn:'Statistics', strandKo:'통계', naplan:true,
-      visualEmoji:'📊', visualCount:0,
-      textEn:q.en, textKo:q.ko,
-      hintEn:'Find the biggest number', hintKo:'가장 큰 수를 찾아요',
-      answer:lang==='ko'?q.answerKo:q.answer,
-      choices: lang==='ko'?shuffle([q.answerKo,...q.wrongKo]):shuffle([q.answer,...q.wrong]),
-    };
-  },
-  compareData: () => {
-    const a=rand(2,10),b=rand(2,10);
-    if(a===b) return QUESTION_GENERATORS.compareData();
-    const diff=Math.abs(a-b);
-    const wrongs=new Set();
-    while(wrongs.size<3){const w=diff+rand(-3,3); if(w!==diff&&w>=0) wrongs.add(w);}
-    return {
-      strandEn:'Statistics', strandKo:'통계', naplan:true,
-      visualEmoji:'📊', visualCount:0,
-      textEn:`Cats: ${a} 🐱  Dogs: ${b} 🐶\nHow many more ${a>b?'cats':'dogs'}?`,
-      textKo:`고양이: ${a}마리 🐱  개: ${b}마리 🐶\n${a>b?'고양이':'개'}가 몇 마리 더 많나요?`,
-      hintEn:'Find the difference', hintKo:'차이를 구해봐요',
-      answer:diff, choices:shuffle([diff,...wrongs]),
-    };
-  },
-  naplanMix: () => {
-    // Mix of NAPLAN-style questions
-    const generators=['orderNumbers','addWord','subWord','skipCount2','skipCount5','shapes2D','collectData','readGraph'];
-    return QUESTION_GENERATORS[generators[rand(0,generators.length-1)]]();
-  },
-};
-
-/* ════════════════════════════════════════════════
-   GAME STATE
-════════════════════════════════════════════════ */
-let currentLesson = null;
-let questions = [];
-let qIndex = 0;
-let sessionScore = 0;
-let sessionCorrect = 0;
-let canAnswer = true;
-let sessionXP = 0;
-
-/* ════════════════════════════════════════════════
-   DATE & LESSON CALCULATION
-════════════════════════════════════════════════ */
-function getTodayStr() {
-  return new Date().toISOString().split('T')[0];
-}
-function getCurrentLesson() {
-  // Term 2 2025: April 28 – June 27
-  const term2Start = new Date('2025-04-28');
-  const today = new Date();
-  let diff = Math.floor((today - term2Start) / 86400000);
-  if(diff < 0) diff = 0;
-  // Skip weekends
-  let schoolDay = 0;
-  let d = new Date(term2Start);
-  let lessonIdx = 0;
-  while(d <= today && lessonIdx < CURRICULUM.length) {
-    const dow = d.getDay();
-    if(dow >= 1 && dow <= 5) {
-      if(schoolDay === diff || (d.toISOString().split('T')[0] === getTodayStr())) {
-        return CURRICULUM[Math.min(lessonIdx, CURRICULUM.length-1)];
-      }
-      schoolDay++; lessonIdx++;
-    }
-    d.setDate(d.getDate()+1);
-  }
-  return CURRICULUM[Math.min(diff, CURRICULUM.length-1)];
-}
-function getWeekLessons() {
-  // Return Mon-Fri lessons for current week
-  const today = new Date();
-  const dow = today.getDay();
-  const monday = new Date(today);
-  monday.setDate(today.getDate() - (dow === 0 ? 6 : dow-1));
-  const days = [];
+/* ── SESSION BUILD ── */
+function buildWarmup(lvNum){
+  const lv=getLV(lvNum);
+  const qs=[];
+  // 5 operation questions
   for(let i=0;i<5;i++){
-    const d = new Date(monday);
-    d.setDate(monday.getDate()+i);
-    days.push(d);
+    const op=lv.ops[rand(0,lv.ops.length-1)];
+    if(op==='add')qs.push(qSimpleAdd(lv));
+    else if(op==='sub')qs.push(qSimpleSub(lv));
+    else if(op==='make10')qs.push(qMake10());
+    else if(op==='cross10')qs.push(qCross10());
+    else if(op==='word')qs.push(qWord(lv));
+    else if(op==='blank')qs.push(qBlank(lv));
+    else qs.push(qSimpleAdd(lv));
   }
-  return days;
+  // 2 dot pattern
+  qs.push(qDot(lv));qs.push(qDot(lv));
+  // 2 ten frame
+  qs.push(qTenFrame(lv));qs.push(qTenFrame(lv));
+  // 1 number line
+  qs.push(qNumberLine(lv));
+  return shuffle(qs);
 }
-
-/* ════════════════════════════════════════════════
-   STREAK
-════════════════════════════════════════════════ */
-function updateStreak() {
-  const today = getTodayStr();
-  if(DATA.lastDate === today) return;
-  const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
-  const yStr = yesterday.toISOString().split('T')[0];
-  if(DATA.lastDate === yStr) DATA.streak = (DATA.streak||0)+1;
-  else DATA.streak = 1;
-  if(DATA.streak > (DATA.bestStreak||0)) DATA.bestStreak = DATA.streak;
-  DATA.lastDate = today;
-  saveData(DATA);
-}
-
-/* ════════════════════════════════════════════════
-   HOME RENDER
-════════════════════════════════════════════════ */
-function renderHome() {
-  applyLang();
-  // Today's lesson
-  const lesson = getCurrentLesson();
-  currentLesson = lesson;
-  document.getElementById('today-lesson-title').textContent = lang==='ko'?lesson.titleKo:lesson.titleEn;
-  document.getElementById('today-strand').textContent = lang==='ko'?T.ko.strandNames[lesson.strand]:lesson.strand;
-  document.getElementById('today-qcount').textContent = lesson.qCount;
-
-  // Check if already done today
-  const done = DATA.lessonsCompleted[lesson.id];
-  const todayDone = done && done.date === getTodayStr();
-  const startBtn = document.getElementById('start-lesson-btn');
-  if(todayDone) {
-    startBtn.querySelector('#txt-start-btn').textContent = lang==='ko'?'✅ 오늘 완료! 복습하기':'✅ Done! Review Again';
-    document.getElementById('today-card').style.background = 'linear-gradient(135deg, #43D9AD, #00B4D8)';
-  } else {
-    document.getElementById('txt-start-btn').textContent = lang==='ko'?'▶ 시작하기':'▶ Start Lesson';
-    document.getElementById('today-card').style.background = '';
+function buildMain(lvNum){
+  const lv=getLV(lvNum);
+  const qs=[];
+  // 3 operation/blank
+  for(let i=0;i<3;i++){
+    if(lvNum<=4)qs.push(rand(0,1)===0?qSimpleAdd(lv):qSimpleSub(lv));
+    else if(lvNum<=6)qs.push(rand(0,1)===0?qBlank(lv):qMake10());
+    else qs.push(rand(0,1)===0?qBlank(lv):qWord(lv));
   }
-
-  // Streak
-  document.getElementById('streak-count').textContent = DATA.streak||0;
-  document.getElementById('streak-label').innerHTML = T[lang].streakLabel(DATA.streak||0);
-  document.getElementById('total-xp').textContent = DATA.xp||0;
-
-  // Week grid
-  const weekEl = document.getElementById('week-grid');
-  weekEl.innerHTML = '';
-  const weekDays = getWeekLessons();
-  const dayShort = T[lang].dayNames;
-  weekDays.forEach((d,i) => {
-    const dStr = d.toISOString().split('T')[0];
-    const isToday = dStr === getTodayStr();
-    const isPast = d < new Date() && !isToday;
-    const lIdx = i; // approximate
-    const l = CURRICULUM[Math.max(0, CURRICULUM.indexOf(lesson) - (new Date().getDay()-1) + i)];
-    const lId = l ? l.id : '';
-    const done = DATA.lessonsCompleted[lId];
-    const pill = document.createElement('div');
-    pill.className = `day-pill${done?' done':isToday?' today':isPast?' locked':''}`;
-    const score = done ? Math.round(done.score) : null;
-    pill.innerHTML = `<div class="day-name">${dayShort[i]}</div><div class="day-icon">${done?'✅':isToday?'📖':'📋'}</div><div class="day-score">${done?score+'%':isToday?(lang==='ko'?'오늘':'today'):'-'}</div>`;
-    weekEl.appendChild(pill);
-  });
-
-  // Curriculum strands
-  const currEl = document.getElementById('curriculum-row');
-  currEl.innerHTML = '';
-  const strands = [
-    {id:'Number',en:'Number',ko:'수와 연산',icon:'🔢'},
-    {id:'Algebra',en:'Algebra',ko:'패턴',icon:'🔣'},
-    {id:'Measurement',en:'Measure',ko:'측정',icon:'📏'},
-    {id:'Space',en:'Space',ko:'도형',icon:'🔷'},
-    {id:'Statistics',en:'Stats',ko:'통계',icon:'📊'},
-  ];
-  strands.forEach(s => {
-    const xp = DATA.strandXP[s.id]||0;
-    const maxXP = 200;
-    const pct = Math.min(100, Math.round(xp/maxXP*100));
-    const card = document.createElement('div');
-    card.className = `curr-card${lesson.strand===s.id?' active-strand':''}`;
-    card.innerHTML = `<div class="curr-icon">${s.icon}</div><div class="curr-name">${lang==='ko'?s.ko:s.en}</div><div class="curr-prog"><div class="curr-prog-fill" style="width:${pct}%"></div></div>`;
-    currEl.appendChild(card);
-  });
+  // 3 word problems
+  for(let i=0;i<3;i++)qs.push(qWord(lv));
+  // 4 curriculum (Space, Algebra, Measurement, Statistics)
+  const curr=[qShape,qSkipCount,qPattern,qMeasure,qStats];
+  for(let i=0;i<4;i++)qs.push(curr[rand(0,curr.length-1)]());
+  return shuffle(qs);
 }
 
-/* ════════════════════════════════════════════════
-   LESSON START
-════════════════════════════════════════════════ */
-function startTodayLesson() {
-  if(!currentLesson) return;
-  startLesson(currentLesson);
-}
-function startLesson(lesson) {
-  currentLesson = lesson;
-  questions = [];
-  for(let i=0;i<lesson.qCount;i++) questions.push(generateQuestion(lesson.skills));
-  qIndex = 0; sessionScore = 0; sessionCorrect = 0; sessionXP = 0; canAnswer = true;
+/* ── SESSION STATE ── */
+let allQ=[],qIdx=0,warmupCorrect=0,mainCorrect=0,sessionXP=0,canAns=true;
+const WU=10,MN=10;
 
-  document.getElementById('lesson-heading').textContent = lang==='ko'?lesson.titleKo:lesson.titleEn;
-  document.getElementById('lesson-sub').textContent = `Term ${lesson.term} · Week ${lesson.week} · Day ${lesson.day}`;
-  document.getElementById('session-xp').textContent = '0';
-
-  buildProgressStrip();
-  showScreen('lesson');
-  renderQuestion();
+function startSession(){
+  const lv=D.currentLevel;
+  allQ=[...buildWarmup(lv),...buildMain(lv)];
+  qIdx=0;warmupCorrect=0;mainCorrect=0;sessionXP=0;canAns=true;
+  document.getElementById('l-title').textContent=t('levelTxt',lv)+' — '+getLVName(lv);
+  document.getElementById('l-xp').textContent='0';
+  buildProgDots();updatePhaseBar();showScreen('lesson');setNav('');renderQ();
 }
-
-/* ════════════════════════════════════════════════
-   QUESTION RENDER
-════════════════════════════════════════════════ */
-function buildProgressStrip() {
-  const strip = document.getElementById('progress-strip');
-  strip.innerHTML = '';
-  questions.forEach((_,i) => {
-    const d = document.createElement('div');
-    d.className = `prog-dot${i===0?' current':''}`;
-    d.id = `pd-${i}`;
-    strip.appendChild(d);
-  });
+function buildProgDots(){
+  const el=document.getElementById('prog-dots');el.innerHTML='';
+  allQ.forEach((_,i)=>{const d=document.createElement('div');d.className='pd'+(i===0?' current':'');d.id=`pd${i}`;el.appendChild(d);});
 }
-function updateStrip(idx, correct) {
-  const prev = document.getElementById(`pd-${idx}`);
-  if(prev) { prev.classList.remove('current'); prev.classList.add('done'); prev.style.background = correct?'var(--accent)':'var(--secondary)'; }
-  const next = document.getElementById(`pd-${idx+1}`);
-  if(next) next.classList.add('current');
+function updatePhaseBar(){
+  const isWU=qIdx<WU;
+  document.getElementById('ph-warmup').className='phase-pill'+(isWU?' warmup':'');
+  document.getElementById('ph-main').className='phase-pill'+(isWU?'':' main');
+  const sub=isWU?`${t('warmupTitle')} — Q${qIdx+1}/10`:`${t('mainTitle')} — Q${qIdx-WU+1}/10`;
+  document.getElementById('ph-label').textContent=sub;
+  document.getElementById('l-sub').textContent=sub;
 }
 
-function renderQuestion() {
-  const q = questions[qIndex];
-  canAnswer = true;
-
-  // Strand badge
-  const badge = document.getElementById('q-strand-badge');
-  badge.textContent = lang==='ko'?(T.ko.strandNames[q.strandEn]||q.strandEn):q.strandEn;
-
-  // NAPLAN badge
-  const nbadge = document.getElementById('q-naplan-badge');
-  nbadge.style.display = q.naplan ? 'inline-flex' : 'none';
-  nbadge.textContent = t('naplanLabel');
-
+function renderQ(){
+  canAns=true;
+  const q=allQ[qIdx];
+  const isWU=qIdx<WU;
+  // Badges
+  const bd=document.getElementById('q-badges');bd.innerHTML='';
+  const ph=document.createElement('span');ph.className='q-badge '+(isWU?'warmup':'main');ph.textContent=isWU?t('warmupTitle'):t('mainTitle');bd.appendChild(ph);
+  if(q.naplan){const nb=document.createElement('span');nb.className='q-badge naplan';nb.textContent=t('naplanBadge');bd.appendChild(nb);}
   // Visual
-  const visual = document.getElementById('q-visual');
-  visual.innerHTML = '';
-  if(q.visualCount > 0) {
-    for(let i=0;i<Math.min(q.visualCount,20);i++) {
-      const s = document.createElement('span');
-      s.textContent = q.visualEmoji;
-      s.style.animationDelay = (i*0.03)+'s';
-      s.className = 'count-item';
-      visual.appendChild(s);
-    }
-    if(q.visualCount2 && q.visualEmoji2) {
-      const sep = document.createElement('span');
-      sep.textContent = ' + ';
-      sep.style.fontSize='1.5rem'; sep.style.fontWeight='900';
-      visual.appendChild(sep);
-      for(let i=0;i<Math.min(q.visualCount2,10);i++) {
-        const s = document.createElement('span');
-        s.textContent = q.visualEmoji2; visual.appendChild(s);
-      }
-    }
-  } else {
-    visual.textContent = q.visualEmoji;
-    visual.style.fontSize = '3.5rem';
-  }
-
-  // Question text
-  document.getElementById('q-text').textContent = lang==='ko'?q.textKo:q.textEn;
-  document.getElementById('q-hint').textContent = lang==='ko'?q.hintKo:q.hintEn;
-
+  renderVisual(q);
+  // Text
+  document.getElementById('q-text').textContent=lang==='ko'?q.textKo:q.textEn;
+  document.getElementById('q-hint').textContent=t(q.hintKey);
   // Choices
-  const choicesEl = document.getElementById('choices');
-  choicesEl.innerHTML = '';
-  const choices = (lang==='ko' && q.choicesKo) ? q.choicesKo : q.choices;
-  const answer = (lang==='ko' && q.answerKo) ? q.answerKo : q.answer;
-  choices.forEach(c => {
-    const btn = document.createElement('button');
-    btn.className = 'choice-btn';
-    btn.textContent = c;
-    btn.onclick = () => checkAnswer(c, btn, answer, (lang==='ko'&&q.choicesKo)?q.choicesKo:q.choices, (lang==='ko'&&q.answerKo)?q.answerKo:q.answer);
-    choicesEl.appendChild(btn);
+  const el=document.getElementById('choices');el.innerHTML='';
+  let choices=q.choices,answer=q.ans;
+  if(q.type==='shape'){choices=lang==='ko'?q.choicesKo:q.choicesEn;answer=lang==='ko'?q.answerKo:q.answerEn;}
+  if(q.type==='stats'){choices=lang==='ko'?q.choicesKo:q.choicesEn;answer=lang==='ko'?q.answerKo:q.answerEn;}
+  choices.forEach(c=>{
+    const btn=document.createElement('button');btn.className='choice';btn.textContent=String(c);
+    btn.onclick=()=>checkAns(c,btn,answer);el.appendChild(btn);
   });
 }
 
-/* ════════════════════════════════════════════════
-   ANSWER CHECKING
-════════════════════════════════════════════════ */
-function checkAnswer(choice, btn, answer, allChoices, correctAnswer) {
-  if(!canAnswer) return;
-  canAnswer = false;
-
-  document.querySelectorAll('.choice-btn').forEach(b=>b.classList.add('locked'));
-
-  const correct = String(choice) === String(correctAnswer);
-  btn.classList.add(correct?'correct':'wrong');
-  if(!correct) {
-    document.querySelectorAll('.choice-btn').forEach(b => {
-      if(String(b.textContent)===String(correctAnswer)) b.classList.add('correct');
-    });
+function renderVisual(q){
+  const el=document.getElementById('q-visual');el.innerHTML='';
+  if(!q.visual){el.style.display='none';return;}
+  el.style.display='flex';
+  const v=q.visual;
+  if(v.kind==='dots'){
+    const g=document.createElement('div');g.className='dot-grid';
+    const cols=v.count<=3?v.count:v.count<=6?3:Math.ceil(Math.sqrt(v.count));
+    g.style.gridTemplateColumns=`repeat(${cols},1fr)`;
+    for(let i=0;i<v.count;i++){const d=document.createElement('div');d.className='dot-cell';d.style.animationDelay=(i*0.04)+'s';g.appendChild(d);}
+    el.appendChild(g);
+  } else if(v.kind==='tenframe'){
+    const tf=document.createElement('div');tf.className='ten-frame';
+    for(let i=0;i<10;i++){const c=document.createElement('div');c.className='tf-cell'+(i<v.count?' filled':'');if(i<v.count)c.textContent='★';tf.appendChild(c);}
+    el.appendChild(tf);
+  } else if(v.kind==='nline'){
+    const nl=document.createElement('div');nl.className='nline';
+    const s=Math.max(0,v.start-1),e=v.ans+2;
+    for(let n=s;n<=e;n++){
+      if(n>s&&n<=v.ans){const ar=document.createElement('span');ar.className='nl-arrow';ar.textContent='→';nl.appendChild(ar);}
+      const nd=document.createElement('div');
+      nd.className='nl-node'+(n===v.start?' start-node':n===v.ans?' ans-node':n>v.start&&n<v.ans?' jump-node':'');
+      nd.textContent=n===v.ans?'?':n;nl.appendChild(nd);
+    }
+    el.appendChild(nl);
+  } else if(v.kind==='emoji'){
+    el.style.fontSize='3.5rem';el.textContent=v.emoji;
   }
-
-  if(correct) { sessionCorrect++; sessionScore+=10; sessionXP+=5; }
-  document.getElementById('session-xp').textContent = sessionXP;
-  updateStrip(qIndex, correct);
-
-  // Toast
-  const msgs = correct ? t('correct_fb') : t('wrong_fb');
-  showToast(msgs[rand(0,msgs.length-1)]);
-
-  setTimeout(() => {
-    qIndex++;
-    if(qIndex >= questions.length) finishLesson();
-    else renderQuestion();
-  }, 1100);
 }
 
-/* ════════════════════════════════════════════════
-   FINISH LESSON
-════════════════════════════════════════════════ */
-function finishLesson() {
-  const total = questions.length;
-  const acc = Math.round(sessionCorrect/total*100);
-  const score = sessionScore;
-  const xp = sessionCorrect * 5 + (acc >= 80 ? 20 : acc >= 60 ? 10 : 0);
+function checkAns(choice,btn,answer){
+  if(!canAns)return;canAns=false;
+  document.querySelectorAll('.choice').forEach(b=>b.classList.add('locked'));
+  const ok=String(choice)===String(answer);
+  btn.classList.add(ok?'correct':'wrong');
+  if(!ok)document.querySelectorAll('.choice').forEach(b=>{if(String(b.textContent)===String(answer))b.classList.add('correct');});
+  if(ok){if(qIdx<WU)warmupCorrect++;else mainCorrect++;sessionXP+=5;document.getElementById('l-xp').textContent=sessionXP;}
+  const pd=document.getElementById(`pd${qIdx}`);
+  if(pd){pd.classList.remove('current');pd.classList.add(ok?'done-ok':'done-wrong');}
+  const nx=document.getElementById(`pd${qIdx+1}`);if(nx)nx.classList.add('current');
+  const msgs=ok?t('correct_fb'):t('wrong_fb');showToast(msgs[rand(0,msgs.length-1)]);
+  setTimeout(()=>{qIdx++;updatePhaseBar();if(qIdx>=allQ.length)finishSession();else renderQ();},1050);
+}
 
-  // Save progress
-  DATA.xp = (DATA.xp||0) + xp;
-  DATA.strandXP[currentLesson.strand] = (DATA.strandXP[currentLesson.strand]||0) + xp;
-  DATA.lessonsCompleted[currentLesson.id] = {
-    score: acc, correct: sessionCorrect, total,
-    date: getTodayStr(), xp
-  };
-  DATA.activityLog[getTodayStr()] = acc;
+function finishSession(){
+  const wAcc=Math.round(warmupCorrect/WU*100),mAcc=Math.round(mainCorrect/MN*100);
+  const tot=warmupCorrect+mainCorrect,totQ=WU+MN,tAcc=Math.round(tot/totQ*100);
+  const xp=tot*5+(tAcc>=80?25:tAcc>=60?10:0);
+  D.xp=(D.xp||0)+xp;D.totalCorrect=(D.totalCorrect||0)+tot;D.totalQuestions=(D.totalQuestions||0)+totQ;
+  allQ.slice(WU).forEach(q=>{D.strandXP[q.strand]=(D.strandXP[q.strand]||0)+3;});
+  const ds=getTodayStr();D.sessions[ds]={warmupAcc:wAcc,mainAcc:mAcc,xp,level:D.currentLevel,date:ds};
   updateStreak();
-  saveData(DATA);
-
-  // Render results
-  const stars = acc>=90?'⭐⭐⭐':acc>=60?'⭐⭐':'⭐';
-  const emoji = acc>=90?'🎉':acc>=60?'🌟':'😊';
-  const title = acc>=90?t('perfect'):acc>=60?t('great'):acc>=50?t('good'):t('tryAgain');
-
-  document.getElementById('results-emoji').textContent = emoji;
-  document.getElementById('results-title').textContent = title;
-  document.getElementById('final-score').textContent = score;
-  document.getElementById('star-row').textContent = stars;
-  document.getElementById('xp-earned').textContent = t('xpEarned', xp);
-  document.getElementById('stat-correct').textContent = `${sessionCorrect}/${total}`;
-  document.getElementById('stat-accuracy').textContent = acc+'%';
-  document.getElementById('stat-streak').textContent = DATA.streak||1;
-
-  if(acc >= 60) confetti();
-  showScreen('results');
+  const chg=checkLevelChange(wAcc);save(D);
+  const stars=tAcc>=90?'⭐⭐⭐':tAcc>=60?'⭐⭐':'⭐';
+  const mascot=tAcc>=90?'🎉':tAcc>=60?'🌟':'😊';
+  const title=tAcc>=90?t('perfect'):tAcc>=60?t('great'):tAcc>=50?t('good'):t('tryMore');
+  document.getElementById('r-mascot').textContent=mascot;
+  document.getElementById('r-title').textContent=title;
+  document.getElementById('r-score').textContent=tot*10;
+  document.getElementById('r-score-lbl').textContent=t('scoreLbl');
+  document.getElementById('r-stars').textContent=stars;
+  document.getElementById('r-xp').textContent=t('xpEarned',xp);
+  document.getElementById('r-correct').textContent=`${tot}/${totQ}`;
+  document.getElementById('r-acc').textContent=tAcc+'%';
+  document.getElementById('r-streak').textContent=D.streak||1;
+  document.getElementById('r-correct-lbl').textContent=t('correct');
+  document.getElementById('r-acc-lbl').textContent=t('accuracy');
+  document.getElementById('r-streak-lbl').textContent=t('streakLbl');
+  document.getElementById('r-home-btn').textContent=t('homeBtn');
+  document.getElementById('r-replay-btn').textContent=t('replayBtn');
+  const banner=document.getElementById('levelup-banner');
+  if(chg==='up'){banner.style.display='block';document.getElementById('lu-title').textContent=t('levelUpTitle');document.getElementById('lu-sub').textContent=t('levelUpSub',D.currentLevel,getLVName(D.currentLevel));confetti();}
+  else if(chg==='down'){banner.style.display='block';document.getElementById('lu-title').textContent=t('levelDownTitle');document.getElementById('lu-sub').textContent=t('levelDownSub',D.currentLevel,getLVName(D.currentLevel));}
+  else banner.style.display='none';
+  if(tAcc>=60)confetti();
+  showScreen('results');setNav('');
 }
-function replayLesson() { if(currentLesson) startLesson(currentLesson); }
+function replaySession(){startSession();}
 
-/* ════════════════════════════════════════════════
-   PROGRESS SCREEN
-════════════════════════════════════════════════ */
-function renderProgress() {
+/* ── HOME RENDER ── */
+function renderHome(){
   applyLang();
-  const totalLessons = Object.keys(DATA.lessonsCompleted).length;
-  const allAcc = Object.values(DATA.lessonsCompleted).map(l=>l.score);
-  const avgAcc = allAcc.length ? Math.round(allAcc.reduce((a,b)=>a+b,0)/allAcc.length) : 0;
-
-  document.getElementById('prog-total-xp').textContent = DATA.xp||0;
-  document.getElementById('prog-streak').innerHTML = `<span style="color:var(--secondary)">🔥</span> ${DATA.bestStreak||0}`;
-  document.getElementById('prog-lessons').textContent = totalLessons;
-  document.getElementById('prog-accuracy').textContent = avgAcc+'%';
-
-  // Strand progress
-  const strands = [
-    {id:'Number',en:'Number',ko:'수와 연산',icon:'🔢'},
-    {id:'Algebra',en:'Algebra',ko:'패턴',icon:'🔣'},
-    {id:'Measurement',en:'Measurement',ko:'측정',icon:'📏'},
-    {id:'Space',en:'Space',ko:'공간/도형',icon:'🔷'},
-    {id:'Statistics',en:'Statistics',ko:'통계',icon:'📊'},
-  ];
-  const list = document.getElementById('strand-progress-list');
-  list.innerHTML = '';
-  strands.forEach(s => {
-    const xp = DATA.strandXP[s.id]||0;
-    const pct = Math.min(100, Math.round(xp/200*100));
-    const row = document.createElement('div');
-    row.className = 'strand-row';
-    row.innerHTML = `<div class="strand-icon">${s.icon}</div>
-      <div class="strand-info">
-        <div class="strand-name">${lang==='ko'?s.ko:s.en}</div>
-        <div class="strand-bar-wrap"><div class="strand-bar" style="width:${pct}%"></div></div>
-      </div>
-      <div class="strand-pct">${pct}%</div>`;
-    list.appendChild(row);
+  const lv=D.currentLevel;
+  document.getElementById('h-today-lbl').textContent=t('todayLbl');
+  document.getElementById('h-today-title').textContent=`${t('levelTxt',lv)}: ${getLVName(lv)}`;
+  document.getElementById('h-start-btn').textContent=t('startBtn');
+  document.getElementById('h-streak').textContent=t('streakTxt',D.streak||0);
+  document.getElementById('h-level').textContent=t('levelTxt',lv);
+  document.getElementById('h-xp').textContent=D.xp||0;
+  const prog=lvProgress();
+  document.getElementById('h-level-prog').style.width=prog.pct+'%';
+  document.getElementById('h-prog-label').textContent=t('progLbl',prog.passing,LV_UP);
+  // Week strip
+  const we=document.getElementById('week-strip');we.innerHTML='';
+  const dn=t('dayNames');
+  getWeekDays().forEach((d,i)=>{
+    const ds=d.toISOString().split('T')[0],isT=ds===getTodayStr(),isPast=d<new Date()&&!isT;
+    const s=D.sessions[ds];
+    const pill=document.createElement('div');pill.className=`day-pill${s?' done':isT?' today':isPast?' locked':''}`;
+    const sc=s?Math.round((s.warmupAcc+s.mainAcc)/2):null;
+    pill.innerHTML=`<div class="dp-name">${dn[i]}</div><div class="dp-icon">${s?'✅':isT?'📖':'📋'}</div><div class="dp-score">${s?sc+'%':isT?(lang==='ko'?'오늘':'today'):'-'}</div>`;
+    we.appendChild(pill);
   });
-
-  // Calendar heatmap (May 2025)
-  document.getElementById('txt-cal-title').textContent = t('calTitle');
-  const calEl = document.getElementById('cal-grid');
-  calEl.innerHTML = '';
-  // Header
-  T[lang].dayNames.forEach(d => {
-    const h = document.createElement('div');
-    h.className = 'cal-cell'; h.style.background='transparent';
-    h.style.fontWeight='800'; h.style.fontSize='0.7rem';
-    h.textContent = d.slice(0,1);
-    calEl.appendChild(h);
+  // Strand grid
+  const sg=document.getElementById('strand-grid');sg.innerHTML='';
+  [{id:'Number',en:'Number',ko:'수와 연산',icon:'🔢'},{id:'Algebra',en:'Algebra',ko:'패턴',icon:'🔣'},{id:'Measurement',en:'Measure',ko:'측정',icon:'📏'},{id:'Space',en:'Space',ko:'도형',icon:'🔷'},{id:'Statistics',en:'Stats',ko:'통계',icon:'📊'}].forEach(s=>{
+    const xp=D.strandXP[s.id]||0,pct=Math.min(100,Math.round(xp/300*100));
+    const c=document.createElement('div');c.className='strand-card';
+    c.innerHTML=`<div class="sc-icon">${s.icon}</div><div class="sc-name">${lang==='ko'?s.ko:s.en}</div><div class="sc-bar-wrap"><div class="sc-bar" style="width:${pct}%"></div></div>`;
+    sg.appendChild(c);
   });
-  // May 2025: starts Thursday (day 3)
-  for(let i=0;i<3;i++) { const e=document.createElement('div'); e.className='cal-cell'; e.style.background='transparent'; calEl.appendChild(e); }
-  for(let day=1;day<=31;day++) {
-    const dStr = `2025-05-${String(day).padStart(2,'0')}`;
-    const score = DATA.activityLog[dStr];
-    const isToday = dStr === getTodayStr();
-    const cell = document.createElement('div');
-    cell.className = `cal-cell${isToday?' today':''}${score>=80?' done-high':score>=50?' done-mid':score>0?' done-low':''}`;
-    cell.textContent = day;
-    calEl.appendChild(cell);
-  }
 }
 
-/* ════════════════════════════════════════════════
-   SCHEDULE (simple modal)
-════════════════════════════════════════════════ */
-function showSchedule() {
-  setNav('nav-schedule');
-  const lines = CURRICULUM.slice(0,10).map((l,i)=>{
-    const done = DATA.lessonsCompleted[l.id];
-    const icon = done?'✅':l.id===currentLesson?.id?'📖':'⬜';
-    return `${icon} W${l.week}D${l.day} · ${lang==='ko'?l.titleKo:l.titleEn}`;
-  }).join('\n');
-  alert(`📅 ${lang==='ko'?'Term 2 학습 일정':'Term 2 Schedule'}\n\n${lines}\n\n${lang==='ko'?'(총 50일 과정)':'(50 lessons total)'}`);
-  setNav('nav-home');
-}
-
-/* ════════════════════════════════════════════════
-   UI HELPERS
-════════════════════════════════════════════════ */
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-function goHome() { showScreen('home'); renderHome(); setNav('nav-home'); }
-function setNav(active) {
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById(active)?.classList.add('active');
-}
-
-function showToast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'toast show';
-  setTimeout(()=>{ el.className='toast hide'; setTimeout(()=>{ el.className='toast'; },300); }, 800);
-}
-
-function confetti() {
-  const colors = ['#6C63FF','#FF6584','#43D9AD','#FFD166','#A78BFA'];
-  for(let i=0;i<40;i++) {
-    setTimeout(()=>{
-      const el = document.createElement('div');
-      el.className = 'confetti-piece';
-      el.style.cssText = `left:${rand(5,95)}vw;width:${rand(8,14)}px;height:${rand(8,14)}px;background:${colors[rand(0,colors.length-1)]};animation-duration:${1.5+Math.random()*2}s;border-radius:${rand(0,1)?'50%':'3px'}`;
-      document.body.appendChild(el);
-      setTimeout(()=>el.remove(), 4000);
-    }, i*50);
-  }
-}
-
-/* ════════════════════════════════════════════════
-   INIT
-════════════════════════════════════════════════ */
-document.addEventListener('DOMContentLoaded', () => {
-  lang = DATA.lang || 'en';
-  document.getElementById('lang-flag').textContent = lang === 'en' ? '🇰🇷' : '🇦🇺';
-  document.getElementById('lang-label').textContent = lang === 'en' ? '한국어' : 'English';
-  updateStreak();
-  renderHome();
+/* ── PROGRESS SCREEN ── */
+function renderProgress(){
   applyLang();
-  // Register SW if available
-  if('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(()=>{});
-  }
+  const ss=Object.values(D.sessions),aa=ss.map(s=>(s.warmupAcc+s.mainAcc)/2),avg=aa.length?Math.round(aa.reduce((a,b)=>a+b,0)/aa.length):0;
+  document.getElementById('p-xp').textContent=D.xp||0;
+  document.getElementById('p-streak').innerHTML=`<span style="color:var(--orange)">🔥</span> ${D.bestStreak||0}`;
+  document.getElementById('p-sessions').textContent=ss.length;
+  document.getElementById('p-acc').textContent=avg+'%';
+  document.getElementById('p-title').textContent=t('progTitle');
+  document.getElementById('p-streak-lbl').textContent=t('bestStreak');
+  document.getElementById('p-sessions-lbl').textContent=t('sessionsDone');
+  document.getElementById('p-acc-lbl').textContent=t('overallAcc');
+  const sl=document.getElementById('strand-list');sl.innerHTML='';
+  [{id:'Number',en:'Number',ko:'수와 연산',icon:'🔢'},{id:'Algebra',en:'Algebra / Patterns',ko:'패턴/대수',icon:'🔣'},{id:'Measurement',en:'Measurement',ko:'측정',icon:'📏'},{id:'Space',en:'Space / Shapes',ko:'공간/도형',icon:'🔷'},{id:'Statistics',en:'Statistics',ko:'통계',icon:'📊'}].forEach(s=>{
+    const xp=D.strandXP[s.id]||0,pct=Math.min(100,Math.round(xp/300*100));
+    const r=document.createElement('div');r.className='strand-row';
+    r.innerHTML=`<div class="sr-icon">${s.icon}</div><div class="sr-info"><div class="sr-name">${lang==='ko'?s.ko:s.en}</div><div class="sr-bar-wrap"><div class="sr-bar" style="width:${pct}%"></div></div></div><div class="sr-pct">${pct}%</div>`;
+    sl.appendChild(r);
+  });
+  const lj=document.getElementById('lj-grid');lj.innerHTML='';
+  document.getElementById('lj-title').textContent=t('levelJourney');
+  LEVELS.forEach(lv=>{
+    const done=D.currentLevel>lv.l,cur=D.currentLevel===lv.l;
+    const n=document.createElement('div');n.className=`lj-node${done?' done':cur?' current':' locked'}`;
+    n.innerHTML=`<div class="lj-num">${done?'✅':cur?'📖':lv.l}</div><div class="lj-name">${lang==='ko'?lv.nameKo:lv.name}</div>`;
+    lj.appendChild(n);
+  });
+}
+
+/* ── HELPERS ── */
+function getTodayStr(){return new Date().toISOString().split('T')[0];}
+function getWeekDays(){const t=new Date(),dow=t.getDay(),m=new Date(t);m.setDate(t.getDate()-(dow===0?6:dow-1));return Array.from({length:5},(_,i)=>{const d=new Date(m);d.setDate(m.getDate()+i);return d;});}
+function updateStreak(){const t=getTodayStr();if(D.lastDate===t)return;const y=new Date();y.setDate(y.getDate()-1);const yd=y.toISOString().split('T')[0];D.streak=D.lastDate===yd?(D.streak||0)+1:1;if(D.streak>(D.bestStreak||0))D.bestStreak=D.streak;D.lastDate=t;save(D);}
+function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.className='toast show';setTimeout(()=>{el.className='toast hide';setTimeout(()=>{el.className='toast';},280);},800);}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function goHome(){showScreen('home');renderHome();setNav('nav-home');}
+function setNav(active){document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));if(active)document.getElementById(active)?.classList.add('active');}
+function confetti(){const cols=['#FF6B6B','#FF9F43','#FFD166','#06D6A0','#118AB2','#7B5EA7','#FF85A1'];for(let i=0;i<45;i++){setTimeout(()=>{const el=document.createElement('div');el.className='conf';el.style.cssText=`left:${rand(3,97)}vw;width:${rand(8,13)}px;height:${rand(8,13)}px;background:${cols[rand(0,cols.length-1)]};animation-duration:${1.4+Math.random()*2.2}s;border-radius:${rand(0,1)?'50%':'3px'}`;document.body.appendChild(el);setTimeout(()=>el.remove(),4500);},i*55);}}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  lang=D.lang||'en';
+  document.getElementById('lang-flag').textContent=lang==='en'?'🇰🇷':'🇦🇺';
+  document.getElementById('lang-lbl').textContent=lang==='en'?'한국어':'English';
+  updateStreak();renderHome();applyLang();
+  if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 });
 </script>
 </body>
