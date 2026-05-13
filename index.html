@@ -735,8 +735,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('lang-flag').textContent=lang==='en'?'🇰🇷':'🇦🇺';
   document.getElementById('lang-lbl').textContent=lang==='en'?'한국어':'English';
   updateStreak();renderHome();applyLang();
-  if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
-});
+  });
 </script>
 </body>
 </html>
